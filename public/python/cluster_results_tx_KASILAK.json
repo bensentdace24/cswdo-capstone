@@ -1,0 +1,240 @@
+[
+    {
+        "transaction_id": 227,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 629,
+        "total_assistances": 1,
+        "total_amount": 1000.0,
+        "cluster_idx": 0,
+        "cluster_label": "Medium Need"
+    },
+    {
+        "transaction_id": 1352,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 1550,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 1658,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 2067,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 2130,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 2155,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 2195,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 2239,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 2248,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 2749,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 3151,
+        "total_assistances": 1,
+        "total_amount": 1000.0,
+        "cluster_idx": 0,
+        "cluster_label": "Medium Need"
+    },
+    {
+        "transaction_id": 3874,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4072,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4180,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4589,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4652,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4677,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 4717,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 4761,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 4770,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 5271,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 5673,
+        "total_assistances": 1,
+        "total_amount": 1000.0,
+        "cluster_idx": 0,
+        "cluster_label": "Medium Need"
+    },
+    {
+        "transaction_id": 6396,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 6594,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 6702,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 7111,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 7174,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 7199,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 7239,
+        "total_assistances": 1,
+        "total_amount": 800.0,
+        "cluster_idx": 2,
+        "cluster_label": "Low Need"
+    },
+    {
+        "transaction_id": 7283,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 7292,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    },
+    {
+        "transaction_id": 7793,
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_idx": 1,
+        "cluster_label": "High Need"
+    }
+]

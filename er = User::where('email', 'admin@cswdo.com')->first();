@@ -1,0 +1,101 @@
+[90m= [39m[34;4mIlluminate\Database\Eloquent\Collection[39;24m {#7353
+    [34mall[39m: [
+      [34;4mApp\Models\User[39;24m {#7354
+        [34mid[39m: [35m2[39m,
+        [34mname[39m: "[32mSteven Holmes[39m",
+        [34memail[39m: "[32msteven@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7355
+        [34mid[39m: [35m3[39m,
+        [34mname[39m: "[32mRylan Rivera[39m",
+        [34memail[39m: "[32mrylan@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7356
+        [34mid[39m: [35m4[39m,
+        [34mname[39m: "[32mJenelyn Gomez[39m",
+        [34memail[39m: "[32mjenelyn@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7357
+        [34mid[39m: [35m6[39m,
+        [34mname[39m: "[32mKorina Lopez[39m",
+        [34memail[39m: "[32mkorina@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7358
+        [34mid[39m: [35m7[39m,
+        [34mname[39m: "[32mMark James[39m",
+        [34memail[39m: "[32mmark@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7359
+        [34mid[39m: [35m8[39m,
+        [34mname[39m: "[32mJason Statham[39m",
+        [34memail[39m: "[32mjason@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7360
+        [34mid[39m: [35m9[39m,
+        [34mname[39m: "[32mLiam Miller[39m",
+        [34memail[39m: "[32mliam@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7361
+        [34mid[39m: [35m10[39m,
+        [34mname[39m: "[32mJames bond[39m",
+        [34memail[39m: "[32mjames@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7362
+        [34mid[39m: [35m13[39m,
+        [34mname[39m: "[32mJaymse Yaop[39m",
+        [34memail[39m: "[32myap123@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7363
+        [34mid[39m: [35m14[39m,
+        [34mname[39m: "[32mvincent dave[39m",
+        [34memail[39m: "[32mdave123@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7364
+        [34mid[39m: [35m15[39m,
+        [34mname[39m: "[32mVincent Dave[39m",
+        [34memail[39m: "[32mvincent123@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7365
+        [34mid[39m: [35m16[39m,
+        [34mname[39m: "[32mboang[39m",
+        [34memail[39m: "[32mboang@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7366
+        [34mid[39m: [35m17[39m,
+        [34mname[39m: "[32mboang[39m",
+        [34memail[39m: "[32mboang1@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7367
+        [34mid[39m: [35m18[39m,
+        [34mname[39m: "[32mboang123[39m",
+        [34memail[39m: "[32mboang123@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7368
+        [34mid[39m: [35m20[39m,
+        [34mname[39m: "[32mAntonio Awa[39m",
+        [34memail[39m: "[32mawa@gmail.com[39m",
+        [34muser_type[39m: [35m1[39m,
+      },
+      [34;4mApp\Models\User[39;24m {#7369
+        [34mid[39m: [35m21[39m,
+        [34mname[39m: "[32mJhon Lenon[39m",
+        [34memail[39m: "[32mlenon24@gmail.com[39m",
+        [34muser_type[39m: [35m2[39m,
+      },
+    ],
+  }
+
