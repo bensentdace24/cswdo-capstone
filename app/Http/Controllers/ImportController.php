@@ -94,6 +94,87 @@ class ImportController extends Controller
         }
     }
 
+    public function importClientsCsv(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt|max:4096',
+        ]);
+
+        $file = $request->file('csv_file');
+        $path = $file->getRealPath();
+        
+        // Use fopen to handle large files more memory-efficiently
+        if (($handle = fopen($path, 'r')) !== FALSE) {
+            $headers = fgetcsv($handle, 1000, ",");
+            $headers = array_map('trim', $headers);
+
+            $importedCount = 0;
+            $skippedCount = 0;
+
+            DB::beginTransaction();
+            try {
+                while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    if (count($headers) !== count($row)) {
+                        continue; // Skip malformed rows
+                    }
+                    
+                    $rowData = array_combine($headers, $row);
+                    $fullName = trim($rowData['full_name'] ?? '');
+
+                    if (empty($fullName)) {
+                        continue;
+                    }
+
+                    $age = $rowData['age'] ?? null;
+                    $sex = $rowData['sex'] ?? null;
+
+                    // 🔍 Check for existing client with same name, age, and sex to avoid duplicates
+                    $existing = \App\Models\Client::where('full_name', $fullName)
+                        ->where('age', $age)
+                        ->where('sex', $sex)
+                        ->first();
+
+                    if ($existing) {
+                        $skippedCount++;
+                        continue;
+                    }
+
+                    // 🧾 Create new client
+                    \App\Models\Client::create([
+                        'full_name'              => $fullName,
+                        'address'                => $rowData['address'] ?? null,
+                        'is_ips'                 => isset($rowData['is_ips']) ? (int)$rowData['is_ips'] : 0,
+                        'is_4ps'                 => isset($rowData['is_4ps']) ? (int)$rowData['is_4ps'] : 0,
+                        'age'                    => $age,
+                        'birthplace'             => $rowData['birthplace'] ?? null,
+                        'contact_number'         => $rowData['contact_number'] ?? null,
+                        'educational_attainment' => $rowData['educational_attainment'] ?? null,
+                        'occupation'             => $rowData['occupation'] ?? null,
+                        'religion'               => $rowData['religion'] ?? null,
+                        'sex'                    => $sex,
+                        'civil_status'           => $rowData['civil_status'] ?? null,
+                        'birthdate'              => !empty($rowData['birthdate']) ? $rowData['birthdate'] : null,
+                        'created_at'             => now(),
+                        'updated_at'             => now(),
+                    ]);
+
+                    $importedCount++;
+                }
+
+                DB::commit();
+                fclose($handle);
+
+                return back()->with('success', "✅ Import Complete! $importedCount beneficiaries added, $skippedCount duplicates skipped.");
+            } catch (\Exception $e) {
+                DB::rollBack();
+                fclose($handle);
+                return back()->with('error', 'Import failed: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('error', 'Could not open CSV file.');
+    }
+
     public function deleteImportedData()
     {
         // ✅ Delete only rows that came from CSV import
