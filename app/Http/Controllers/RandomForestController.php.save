@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
+class RandomForestController extends Controller
+{
+    
+
+    public function runAnalysis()
+{
+    $python = '/usr/bin/python3'; // correct for most VPS
+    $scriptPath = public_path('python/random_forest_classifier.py');
+
+    // Run python and capture output (for debugging)
+    $command = "{$python} {$scriptPath} 2>&1";
+    $output = shell_exec($command);
+
+    // Log output so we can see errors if any
+    Log::info("RandomForest Python Output: " . $output);
+
+    // Update timestamp
+    DB::table('ai_updates')->updateOrInsert(
+        ['id' => 2],
+        ['updated_at' => now('Asia/Manila')]
+    );
+
+    return redirect()->route('admin.classification')
+        ->with('success', 'Random Forest Analysis executed successfully.');
+}
+}

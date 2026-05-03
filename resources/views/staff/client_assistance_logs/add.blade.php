@@ -57,8 +57,8 @@
                                             <label
                                                 style="font-weight: 600; color: #555; margin-bottom: 10px; display: block;">Date
                                                 of Assistance <span style="color: #dc3545;">*</span></label>
-                                            <input type="text" name="assisted_at" class="form-control" required
-                                                value="{{ date('m-d-Y') }}" readonly
+                                            <input type="date" name="assisted_at" class="form-control" required
+                                                value="{{ date('Y-m-d') }}" readonly
                                                 style="border: none; border-bottom: 1px solid #ccc; border-radius: 0; padding: 8px 0; background-color: transparent; box-shadow: none; font-size: 1rem;">
 
                                         </div>

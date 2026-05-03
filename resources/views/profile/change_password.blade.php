@@ -43,7 +43,16 @@
                                     to confirm identity.</p>
                             </div>
 
-                            <form method="post" action="{{ url('admin/change_password') }}"> {{-- Keep action empty if route is defined via controller/middleware --}}
+				@php
+    $prefix = match ((string) Auth::user()->user_type) {
+        '1' => 'admin',
+        '2' => 'staff',
+        '3' => 'student',
+        '4' => 'parent',
+        default => 'staff',
+    };
+@endphp
+                            <form method="post" action="{{ url($prefix . '/change_password') }}">
                                 @csrf
 
                                 <div class="card-body" style="padding: 40px;">

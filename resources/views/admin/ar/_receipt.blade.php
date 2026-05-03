@@ -1,5 +1,6 @@
 <!-- BEGIN RECEIPT COPY -->
-<div class="card px-5 py-4" style="background-color: #fff; font-family: 'Arial', sans-serif; border: none; line-height: 1.8; page-break-inside: avoid;">
+<div class="card px-5 py-4"
+    style="background-color: #fff; font-family: 'Arial', sans-serif; border: none; line-height: 1.8; page-break-inside: avoid;">
 
     <!-- Header Logos and Title -->
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -21,13 +22,18 @@
     <!-- Body -->
     <div style="font-size: 16px; text-align: justify;">
         <p>
-            This is to acknowledge the <strong>RECEIPT</strong> from LGU-Panabo City through City Social Welfare and Development Office (CSWDO) the amount of
-            <u><strong>{{ strtoupper($record->amount_words) }}</u> (₱ <u>{{ number_format($record->amount, 2) }}</strong></u>) for the Assistance for Individual in Crisis Situation (AICS)
+            This is to acknowledge the <strong>RECEIPT</strong> from LGU-Panabo City through City Social Welfare and
+            Development Office (CSWDO) the amount of
+            <u><strong>{{ strtoupper($record->amount_words) }}</u> (₱
+            <u>{{ number_format($record->amount, 2) }}</strong></u>) for the Assistance for Individual in Crisis
+            Situation (AICS)
             <u><strong>{{ strtoupper($record->type) }}</strong></u>.
         </p>
 
         <p>
-            Received this <u><strong>{{ strtoupper($record->day_received) }}</strong></u> day of <u><strong>{{ strtoupper($record->month_received) }} {{ $record->year_received }}</strong></u> at LGU-Panabo City CSWDO.
+            Received this <u><strong>{{ strtoupper($record->day_received) }}</strong></u> day of
+            <u><strong>{{ strtoupper($record->month_received) }} {{ $record->year_received }}</strong></u> at LGU-Panabo
+            City CSWDO.
         </p>
     </div>
 
@@ -65,11 +71,13 @@
 
         <!-- Attached Photo -->
         <div class="col-md-4 d-flex align-items-center justify-content-center">
-            <div style="border: 2px solid #000; width: 1.5in; height: 1.5in; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                @if($record->photo)
-                <img src="{{ asset($record->photo) }}" alt="Beneficiary Photo" style="width: 100%; height: 100%; object-fit: cover;">
+            <div
+                style="border: 2px solid #000; width: 1.5in; height: 1.5in; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                @if ($record->photo)
+                    <img src="{{ asset($record->photo) }}" alt="Beneficiary Photo"
+                        style="width: 100%; height: 100%; object-fit: cover;">
                 @else
-                <strong style="font-size: 11px;">ATTACHED PHOTO HERE</strong>
+                    <strong style="font-size: 11px;">ATTACHED PHOTO HERE</strong>
                 @endif
             </div>
         </div>

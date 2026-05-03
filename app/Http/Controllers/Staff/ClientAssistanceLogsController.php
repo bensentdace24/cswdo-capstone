@@ -20,19 +20,19 @@ class ClientAssistanceLogsController extends Controller
         return view('staff.client_assistance_logs.add', compact('client'));
     }
 
-    public function insert($client_id, Request $request)
-    {
-        $request->validate([
-            'assisted_at' => 'required|date',
-            'type' => 'nullable|string|max:255',
-        ]);
+    public function insert(Request $request, $client_id)
+{
+    $request->validate([
+        'assisted_at' => 'required|date',
+        'type' => 'required|string|max:255',
+    ]);
 
-        ClientAssistanceLog::create([
-            'client_id' => $client_id,
-            'assisted_at' => $request->assisted_at,
-            'type' => $request->type,
-        ]);
+    ClientAssistanceLog::create([
+        'client_id' => $client_id,
+        'assisted_at' => $request->assisted_at,
+        'type' => $request->type,
+    ]);
 
-        return redirect('staff/client/list')->with('success', 'Assistance log recorded.');
-    }
+    return redirect('staff/client/list')->with('success', 'Assistance log recorded.');
+}
 }

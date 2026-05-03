@@ -115,6 +115,20 @@
                                                 value="{{ $record->year_received }}"
                                                 style="border: none; border-bottom: 1px solid #ccc; border-radius: 0; padding: 8px 0; background-color: transparent; box-shadow: none; font-size: 1rem;">
                                         </div>
+                                        {{-- SECTION: FINANCE OFFICER --}}
+                                        <div class="row"
+                                            style="border-top: 1px solid #eee; padding-top: 30px; margin-bottom: 30px;">
+                                            <div class="col-md-12 form-group">
+                                                <label
+                                                    style="font-weight: 600; color: #555; margin-bottom: 10px; display: block;">
+                                                    Finance Officer Name
+                                                </label>
+                                                <input type="text" name="finance_officer_name" class="form-control"
+                                                    value="{{ request('finance_officer_name') }}"
+                                                    placeholder="e.g. KAREN A. MALAKINGBATO"
+                                                    style="border: none; border-bottom: 1px solid #ccc; border-radius: 0; padding: 8px 0; background-color: transparent; box-shadow: none; font-size: 1rem;">
+                                            </div>
+                                        </div>
 
                                         <div class="col-md-12 form-group" style="margin-top: 15px;">
                                             <label

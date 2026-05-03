@@ -1,0 +1,42 @@
+[
+    {
+        "transaction_id": 12,
+        "amount": 700.0,
+        "cluster_label": "Low Need",
+        "cluster": "Low Need",
+        "date": "2026-03-06",
+        "client": "Client 12"
+    },
+    {
+        "transaction_id": 19,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-06",
+        "client": "Client 19"
+    },
+    {
+        "transaction_id": 21,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-06",
+        "client": "Client 21"
+    },
+    {
+        "transaction_id": 22,
+        "amount": 700.0,
+        "cluster_label": "Low Need",
+        "cluster": "Low Need",
+        "date": "2026-03-06",
+        "client": "Client 22"
+    },
+    {
+        "transaction_id": 36,
+        "amount": 1000.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-07",
+        "client": "Client 36"
+    }
+]

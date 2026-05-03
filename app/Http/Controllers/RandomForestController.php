@@ -11,36 +11,47 @@ use Illuminate\Support\Facades\Storage;
 class RandomForestController extends Controller
 {
     public function index()
-    {
-        $filePath = public_path('python/randomforest_results.json');
+{
+    $filePath = public_path('python/randomforest_results.json');
 
-        $results = file_exists($filePath)
-            ? json_decode(file_get_contents($filePath), true)
-            : null;
+    if (!file_exists($filePath)) {
+        $results = null;
+    } else {
+        $raw = file_get_contents($filePath);
+        $results = json_decode($raw, true);
 
-        $lastUpdated = DB::table('ai_updates')->value('updated_at');
-
-        return view('admin.classification', compact('results', 'lastUpdated'));
+        if ($results === null) {
+            $results = null;
+        }
     }
 
+    $lastUpdated = DB::table('ai_updates')->value('updated_at');
 
+    return view('admin.classification', compact('results', 'lastUpdated'));
+}
     public function runAnalysis()
-    {
-        $python = config('python.python_path');
-        $scriptPath = public_path('python/random_forest_classifier.py');
+{
+    // Use the SAME venv python that works for clustering
+    $python = base_path('venv/bin/python'); 
+    $scriptPath = public_path('python/random_forest_classifier.py');
 
-        // Correct and safe execution for Windows
-        $command = "\"{$python}\" \"{$scriptPath}\" > NUL 2>&1";
+    // Build safe command
+    $cmd = escapeshellcmd($python) . ' ' . escapeshellarg($scriptPath) . ' 2>&1';
 
-        shell_exec($command);
+    // Run and capture output
+    $output = shell_exec($cmd);
 
-        // Save timestamp
-        DB::table('ai_updates')->updateOrInsert(
-            ['id' => 2], // <-- use separate ID from K-Means
-            ['updated_at' => now('Asia/Manila')]
-        );
+    // Log for debugging
+    \Log::info("RandomForest CMD: $cmd");
+    \Log::info("RandomForest OUTPUT: " . $output);
 
-        return redirect()->route('admin.classification')
-            ->with('success', 'Random Forest Analysis executed successfully.');
-    }
+    // Update timestamp (optional, keep if you want)
+    \DB::table('ai_updates')->updateOrInsert(
+        ['id' => 2],
+        ['updated_at' => now('Asia/Manila')]
+    );
+
+    return redirect()->route('admin.classification')
+        ->with('success', 'Random Forest Analysis executed successfully.');
+}
 }

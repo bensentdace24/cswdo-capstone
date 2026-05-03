@@ -10,11 +10,12 @@ import os
 # =======================================================
 try:
     db = mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="ivanjay1629",
-        database="cswdo_1"
-    )
+      host="127.0.0.1",
+    user="root",
+    password="NewStrongPass123!",
+    database="cswdo",
+    port=3306
+)
 except:
     print("❌ Database connection failed")
     exit()
@@ -25,14 +26,13 @@ except:
 # =======================================================
 query = """
 SELECT
-    a.client_id,
-    r.barangay,
-    COUNT(a.id) AS total_assistances,
-    COALESCE(SUM(r.amount), 0) AS total_amount
-FROM client_assistance_logs a
-JOIN acknowledgement_receipts r ON a.client_id = r.client_id
-WHERE r.barangay IS NOT NULL
-GROUP BY a.client_id, r.barangay
+    UPPER(TRIM(barangay)) AS barangay,
+    COUNT(*) AS total_assistances,
+    SUM(amount) AS total_amount
+FROM acknowledgement_receipts
+WHERE barangay IS NOT NULL
+  AND barangay != ''
+GROUP BY barangay
 """
 
 data = pd.read_sql(query, db)
@@ -56,18 +56,29 @@ data["urgency_score"] = (
 # =======================================================
 # 4. Percentile-Based Classification (Balanced)
 # =======================================================
-p50 = np.percentile(data["urgency_score"], 50)
-p90 = np.percentile(data["urgency_score"], 90)
+mean_score = data["urgency_score"].mean()
+std_score = data["urgency_score"].std()
+
+# Fallback if std is 0 (all values same)
+if std_score == 0:
+    std_score = 1
+
+high_threshold = mean_score + 0.5 * std_score
+medium_threshold = mean_score
 
 def classify(score):
-    if score >= p90:
+    if score >= high_threshold:
         return "High Urgency"
-    elif score >= p50:
+    elif score >= medium_threshold:
         return "Medium Urgency"
     else:
         return "Low Urgency"
 
 data["predicted_urgency"] = data["urgency_score"].apply(classify)
+
+print("Mean urgency score:", mean_score)
+print("High threshold:", high_threshold)
+print("Medium threshold:", medium_threshold)
 
 # Convert to numeric labels for consistency
 label_map = {
@@ -138,20 +149,21 @@ output = {
     "feature_importance": feature_importance,
     "anomalies": high_anomalies.to_dict(orient="records"),
     "data_preview": data.head(10).to_dict(orient="records"),
-    # to display all records in excel not just only 10
-    # with this code -> "rows": data.to_dict(orient="records"),
+    "rows": data.to_dict(orient="records"),
     "total_rows": int(total_rows)
-}   
+}
 
-os.makedirs("public/python", exist_ok=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # /public/python
+output_path = os.path.join(BASE_DIR, "randomforest_results.json")
 
-output_path = "public/python/randomforest_results.json"
 with open(output_path, "w") as f:
     json.dump(output, f, indent=4)
 
-print("\n✅ Random Forest (Percentile + Z-Score Version) Complete!")
-print(f"Results saved to {output_path}")
+print("Saved to:", output_path)
 
+print(data.head())
+print("Rows:", len(data))
+print("\n✅ Random Forest (Percentile + Z-Score Version) Complete!")
 print("\n--- Summary ---")
 print("Urgency counts:", summary)
 print("\nHigh urgency anomalies:", len(high_anomalies))

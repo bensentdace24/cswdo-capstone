@@ -1,0 +1,366 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\ClientAssistanceLog;
+use App\Models\AcknowledgementReceipt;
+use Illuminate\Support\Facades\Response;
+
+class ReportsController extends Controller
+{
+    public function index()
+    {
+        $month = request('month');
+        $year = request('year');
+        $barangay = request('barangay');
+
+        // ✅ OFFICIAL BARANGAYS (CANONICAL LIST)
+        $officialBarangays = [
+            'A O FLOIRENDO',
+            'DATU ABDUL DADIA',
+            'BUENAVISTA',
+            'CACAO',
+            'CAGANGOHAN',
+            'CONSOLACION',
+            'DAPCO',
+            'GREDU',
+            'JP LAUREL',
+            'KASILAK',
+            'KATIPUNAN',
+            'KATUALAN',
+            'KAUSWAGAN',
+            'KIOTOY',
+            'LITTLE PANAY',
+            'LOWER PANAGA',
+            'MABUNAO',
+            'MADUAO',
+            'MALATIVAS',
+            'MANAY',
+            'NANYO',
+            'NEW MALAGA',
+            'NEW MALITBOG',
+            'NEW PANDAN',
+            'NEW VISAYAS',
+            'QUEZON',
+            'SALVACION',
+            'SAN FRANCISCO',
+            'SAN NICOLAS',
+            'SAN PEDRO',
+            'SAN ROQUE',
+            'SAN VICENTE',
+            'SANTA CRUZ',
+            'SANTO NINO',
+            'SINDATON',
+            'SOUTHERN DAVAO',
+            'TAGPORE',
+            'TIBUNGOL',
+            'UPPER LICANAN',
+            'WATERFALL',
+        ];
+
+        // ✅ TOTAL AMOUNT
+        $totalAssistanceAmount = $this->applyBarangayFilter(AcknowledgementReceipt::query(), $barangay)
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
+            ->sum('amount');
+        // ✅ RAW DATA
+        $rawData = AcknowledgementReceipt::select(
+            'barangay',
+            DB::raw('COUNT(*) as total_assistances'),
+            DB::raw('SUM(amount) as total_amount')
+        )->get();
+
+        // ✅ MERGE DUPLICATES
+        $mergedBarangays = collect();
+
+        foreach ($rawData as $row) {
+            $normalized = $this->normalizeBarangay($row->barangay);
+
+            if (!$mergedBarangays->has($normalized)) {
+                $mergedBarangays[$normalized] = (object)[
+                    'barangay' => $normalized,
+                    'total_assistances' => 0,
+                    'total_amount' => 0,
+                ];
+            }
+
+            $mergedBarangays[$normalized]->total_assistances += $row->total_assistances;
+            $mergedBarangays[$normalized]->total_amount += $row->total_amount;
+        }
+
+        $barangayData = $mergedBarangays->values();
+        $topBarangays = $this->applyBarangayFilter(
+            AcknowledgementReceipt::select(
+                DB::raw("REPLACE(REPLACE(UPPER(barangay), '.', ''), ' ', '') as barangay"),
+                DB::raw('COUNT(*) as total_assistances')
+            ),
+            $barangay
+        )
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
+            ->groupBy('barangay')
+            ->orderByDesc('total_assistances')
+            ->limit(5)
+            ->get();
+
+
+        // ✅ TOP 5 BARANGAYS
+
+        $topBarangay = $topBarangays->first();
+        $topBarangayName = $topBarangay->barangay ?? '—';
+        $topBarangayCount = $topBarangay->total_assistances ?? 0;
+
+        // ✅ ASSISTANCE TYPE DATA (REAL)
+	$assistanceTypeData = AcknowledgementReceipt::select('type', DB::raw('COUNT(*) as total'))
+    ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+    ->when($year, fn($q) => $q->whereYear('created_at', $year))
+    ->groupBy('type')
+    ->get();
+
+        // ✅ MONTHLY TREND (REAL)
+        
+
+        // ✅ TOTAL BENEFICIARIES
+        $totalBeneficiaries = $this->applyBarangayFilter(AcknowledgementReceipt::query(), $barangay)
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
+            ->distinct('client_verification_id')
+            ->count('client_verification_id');
+
+
+        $lastUpdated = DB::table('ai_updates')->value('updated_at');
+
+        $barangayList = collect($officialBarangays)->sort()->values();
+
+        return view('admin.reports', compact(
+            'totalAssistanceAmount',
+            'totalBeneficiaries',
+            'barangayData',
+            'topBarangays',          // ✅ IMPORTANT
+            'topBarangayName',
+            'topBarangayCount',
+            'lastUpdated',
+            'barangayList',
+            'assistanceTypeData',
+            'monthlyTrend'
+        ));
+    }
+
+    // ✅ HELPER FUNCTION (MUST BE OUTSIDE index())
+    private function normalizeBarangay($name)
+    {
+        $name = strtoupper($name);
+
+        // Remove (POBLACION), (ROXAS), etc
+        $name = preg_replace('/\s*\(.*?\)\s*/', '', $name);
+
+        // Replace Ñ with N
+        $name = str_replace('Ñ', 'N', $name);
+
+        // Remove dots
+        $name = str_replace('.', '', $name);
+
+        // Normalize spaces
+        $name = preg_replace('/\s+/', ' ', trim($name));
+
+        return $name;
+    }
+    private function applyBarangayFilter($query, $barangay)
+    {
+        if (!$barangay) {
+            return $query;
+        }
+
+        $clean = str_replace(['.', ' '], '', strtoupper($barangay));
+
+        return $query->whereRaw(
+            "REPLACE(REPLACE(UPPER(barangay), '.', ''), ' ', '') = ?",
+            [$clean]
+        );
+    }
+
+
+    public function exportCsv()
+    {
+        $date = now()->format('Y-m-d');
+        $fileName = "CSWDO_Report_{$date}.csv";
+
+        // Fetch data (same logic)
+        $barangayData = AcknowledgementReceipt::select(
+            'barangay',
+            DB::raw('SUM(amount) as total_amount'),
+            DB::raw('COUNT(*) as total_assistances')
+        )
+            ->groupBy('barangay')
+            ->orderByDesc('total_amount')
+            ->get();
+
+        $assistanceTypeData = ClientAssistanceLog::select(
+            'type',
+            DB::raw('COUNT(*) as total')
+        )
+            ->groupBy('type')
+            ->get();
+
+        $monthlyTrend = ClientAssistanceLog::select(
+            DB::raw("DATE_FORMAT(created_at, '%b %Y') as month"),
+            DB::raw("COUNT(*) as total")
+        )
+            ->groupByRaw("DATE_FORMAT(created_at, '%b %Y')")
+            ->orderByRaw("MIN(created_at)")
+            ->get();
+
+        $headers = [
+            "Content-type" => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate",
+            "Expires" => "0"
+        ];
+
+        // Add BOM to fix Excel encoding issues
+        $callback = function () use ($barangayData, $assistanceTypeData, $monthlyTrend) {
+            $file = fopen('php://output', 'w');
+
+            // UTF-8 BOM (fixes Excel encoding)
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // Header row
+            fputcsv($file, ['Section', 'Category', 'Label', 'Value']);
+
+            // Barangay Summary
+            foreach ($barangayData as $item) {
+                fputcsv($file, [
+                    'Barangay Summary',
+                    'Barangay',
+                    $item->barangay,
+                    '₱' . number_format($item->total_amount, 2)
+                ]);
+            }
+
+            // Assistance Types
+            foreach ($assistanceTypeData as $type) {
+                fputcsv($file, [
+                    'Assistance Type',
+                    'Type',
+                    $type->type,
+                    $type->total
+                ]);
+            }
+
+            // Monthly Trend
+            foreach ($monthlyTrend as $month) {
+                fputcsv($file, [
+                    'Monthly Trend',
+                    'Month',
+                    $month->month,
+                    $month->total
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+
+    public function clusterAnalysis()
+    {
+        // READ the latest JSON file created by Python
+        $jsonPath = public_path('python/cluster_results.json');
+
+        if (!file_exists($jsonPath)) {
+            return response()->json([
+                'error' => 'cluster_results.json not found'
+            ], 404);
+        }
+
+        // Decode JSON
+        $kmeansData = json_decode(file_get_contents($jsonPath), true);
+
+        return response()->json($kmeansData);
+    }
+
+    public function exportCluster()
+    {
+        $filePath = public_path('python/cluster_results.json');
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'No cluster results found. Please run clustering first.');
+        }
+
+        $jsonData = json_decode(file_get_contents($filePath), true);
+
+        $filename = 'CSWDO_Cluster_Report_' . date('Y-m-d') . '.csv';
+        $csvPath = storage_path('app/public/' . $filename);
+
+        $fp = fopen($csvPath, 'w');
+
+        // UTF-8 BOM for Excel
+        fprintf($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        fputcsv($fp, ['Barangay', 'Total Assistances', 'Total Amount', 'Cluster Label']);
+
+        foreach ($jsonData as $row) {
+
+            // FIXED: Peso sign encoding correct for Excel
+            $formattedAmount = isset($row['total_amount'])
+                ? mb_convert_encoding('₱' . number_format($row['total_amount'], 2), 'UTF-8', 'UTF-8')
+                : '';
+
+            fputcsv($fp, [
+                $row['barangay'] ?? '',
+                $row['total_assistances'] ?? '',
+                $formattedAmount,
+                $row['cluster_label'] ?? '',
+            ]);
+        }
+
+        fclose($fp);
+
+        return response()->download($csvPath)->deleteFileAfterSend(true);
+    }
+
+    public function exportClassificationResults()
+    {
+        $filePath = public_path('python/randomforest_results.json');
+
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'No classification results found. Please run the Random Forest analysis first.');
+        }
+
+        $data = json_decode(file_get_contents($filePath), true);
+        $filename = 'randomforest_results_' . date('Y-m-d_H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $columns = ['Client ID', 'Barangay', 'Total Assistances', 'Total Amount', 'Predicted Urgency', 'Is Anomaly'];
+
+        $callback = function () use ($data, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($data['rows'] as $row) {
+                fputcsv($file, [
+                    $row['client_id'],
+                    $row['barangay'],
+                    $row['total_assistances'],
+                    $row['total_amount'],
+                    $row['predicted_urgency'],
+                    $row['is_anomaly'] ? 'Yes' : 'No',
+                ]);
+            }
+
+
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+}

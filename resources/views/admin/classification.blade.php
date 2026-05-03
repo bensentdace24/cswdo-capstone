@@ -1,248 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<<<<<<< HEAD
-    {{-- Custom Styles for this page --}}
-    <style>
-        .content-wrapper {
-            background-color: #f8fafc !important;
-        }
-
-        .page-title {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            color: #1e293b;
-            letter-spacing: -0.02em;
-        }
-
-        /* Modernized Buttons */
-        .btn-run-analysis {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            border: none;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .btn-run-analysis:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            color: white;
-        }
-
-        .btn-export-csv {
-            background-color: #10b981;
-            color: white;
-            border: none;
-            font-weight: 600;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .btn-export-csv:hover {
-            background-color: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            color: white;
-        }
-
-        /* Card Styling */
-        .analysis-card {
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            height: 100%;
-        }
-
-        .analysis-card .card-header {
-            background: transparent;
-            border-bottom: 1px solid #f1f5f9;
-            padding: 1.5rem;
-        }
-
-        .analysis-card .card-header h5 {
-            font-weight: 700;
-            color: #334155;
-            margin-bottom: 0;
-        }
-
-        /* Legend Box Styling */
-        .urgency-legend {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid #f1f5f9;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .legend-item .count {
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
-
-        .legend-item .label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Table Styling */
-        .flagged-table thead th {
-            background-color: #f8fafc;
-            color: #64748b;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            border-top: none;
-        }
-
-        .urgency-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.75rem;
-        }
-    </style>
-
-    <div class="content-wrapper px-4 py-4">
-        {{-- HEADER SECTION --}}
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div>
-                <p class="text-primary fw-bold mb-1" style="font-size: 0.85rem; text-transform: uppercase;">Machine Learning
-                    Model</p>
-                <h1 class="page-title">Classification Analysis</h1>
-            </div>
-
-            <div class="d-flex gap-2">
-                <a href="{{ route('admin.classification.run') }}" class="btn btn-run-analysis px-4 py-2 shadow-sm">
-                    <i class="fas fa-play me-2"></i> Run Random Forest
-                </a>
-                <a href="{{ route('admin.classification.export') }}" class="btn btn-export-csv px-4 py-2 shadow-sm">
-                    <i class="fas fa-file-csv me-2"></i> Export CSV
-                </a>
-            </div>
-        </div>
-
-        @if (session('success'))
-            <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">{{ session('success') }}</div>
-        @endif
-
-        @if (!$results)
-            <div class="alert alert-info border-0 shadow-sm rounded-3">
-                <i class="fas fa-info-circle me-2"></i> No active analysis. Initiate Random Forest to visualize urgency
-                levels.
-            </div>
-        @else
-            <div class="row g-4 mb-4">
-                {{-- URGENCY DISTRIBUTION --}}
-                <div class="col-md-6">
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h5>Urgency Distribution</h5>
-                            <small class="text-muted">Breakdown of population by urgency classification</small>
-                        </div>
-                        <div class="card-body p-4 d-flex flex-column justify-content-between">
-                            <div style="height: 280px;">
-                                <canvas id="urgencySummaryChart"></canvas>
-                            </div>
-
-                            <div class="urgency-legend mt-4">
-                                <div class="legend-item text-center">
-                                    <div class="count text-danger">{{ $results['summary']['High Urgency'] ?? 0 }}</div>
-                                    <div class="label text-muted">High</div>
-                                </div>
-                                <div class="legend-item text-center">
-                                    <div class="count text-warning">{{ $results['summary']['Medium Urgency'] ?? 0 }}</div>
-                                    <div class="label text-muted">Medium</div>
-                                </div>
-                                <div class="legend-item text-center">
-                                    <div class="count text-success">{{ $results['summary']['Low Urgency'] ?? 0 }}</div>
-                                    <div class="label text-muted">Low</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- FEATURE IMPORTANCE --}}
-                <div class="col-md-6">
-                    <div class="analysis-card">
-                        <div class="card-header">
-                            <h5>Feature Importance</h5>
-                            <small class="text-muted">Impact of specific variables on model predictions</small>
-                        </div>
-                        <div class="card-body p-4">
-                            <div style="height: 380px;">
-                                <canvas id="featureImportanceChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- FLAGGED CASES --}}
-            <div class="analysis-card mb-5">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5><i class="fas fa-exclamation-triangle text-danger me-2"></i> Flagged High Urgency Cases</h5>
-                        <small class="text-muted">Individuals predicted at the highest priority level</small>
-                    </div>
-                    <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-bold">
-                        {{ count($highUrgencyAnomalies ?? []) }} High Priority Entries
-                    </span>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table flagged-table align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="ps-4">Client ID</th>
-                                    <th>Barangay</th>
-                                    <th>Assistances</th>
-                                    <th>Total Disbursed</th>
-                                    <th class="text-center">Classification</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $highUrgencyAnomalies = array_filter($results['anomalies'] ?? [], function ($row) {
-                                        return ($row['predicted_urgency'] ?? '') === 'High Urgency';
-                                    });
-                                @endphp
-
-                                @forelse ($highUrgencyAnomalies as $row)
-                                    <tr>
-                                        <td class="ps-4 fw-bold">#{{ $row['client_id'] }}</td>
-                                        <td>{{ $row['barangay'] }}</td>
-                                        <td>{{ $row['total_assistances'] }}</td>
-                                        <td>{{ $row['total_amount'] ? '₱' . number_format($row['total_amount'], 2) : 'N/A' }}
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="urgency-badge bg-danger text-white">HIGH URGENCY</span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4 text-muted">No high-urgency anomalies
-                                            detected in current run.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    @if ($results)
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
-=======
 
     <div class="content-wrapper" style="background-color: #f4f6f7; min-height: 100vh;">
 
@@ -258,8 +16,6 @@
                         style="background-color: #3498db; border-radius: 8px; font-weight: 600; padding: 8px 18px; color: white;">
                         <i class="fas fa-play mr-1"></i> Run Analysis
                     </a>
-
-
 
                     <a href="{{ route('admin.classification.export') }}" class="btn"
                         style="background-color: #2ecc71; border-radius: 8px; font-weight: 600; padding: 8px 18px; color: white;">
@@ -277,9 +33,20 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                @if (!$results)
-                    <div class="alert alert-info">No results yet. Click “Run Random Forest Analysis” to generate
-                        classification.</div>
+                @if (session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @php
+                    // Safely check if results exist and have data
+                    $hasResults = !empty($results) && is_array($results);
+                    $hasSummary = $hasResults && isset($results['summary']) && is_array($results['summary']);
+                    $hasAnomalies = $hasResults && isset($results['anomalies']) && is_array($results['anomalies']);
+                    $hasFeatureImportance = $hasResults && isset($results['feature_importance']) && is_array($results['feature_importance']);
+                @endphp
+
+                @if (!$hasResults)
+                    <div class="alert alert-info">No results yet. Click "Run Random Forest Analysis" to generate classification.</div>
                 @else
                     <div class="row">
 
@@ -309,19 +76,22 @@
 
                                             <div style="text-align: center;">
                                                 <div style="color: #e74c3c; font-weight: 700;">High</div>
-                                                <div style="color: #e74c3c;">{{ $results['summary']['High Urgency'] ?? 0 }}
+                                                <div style="color: #e74c3c;">
+                                                    {{ $results['summary']['High Urgency'] ?? $results['summary']['high'] ?? 0 }}
                                                 </div>
                                             </div>
 
                                             <div style="text-align: center;">
                                                 <div style="color: #f39c12; font-weight: 700;">Medium</div>
                                                 <div style="color: #f39c12;">
-                                                    {{ $results['summary']['Medium Urgency'] ?? 0 }}</div>
+                                                    {{ $results['summary']['Medium Urgency'] ?? $results['summary']['medium'] ?? 0 }}
+                                                </div>
                                             </div>
 
                                             <div style="text-align: center;">
                                                 <div style="color: #2ecc71; font-weight: 700;">Low</div>
-                                                <div style="color: #2ecc71;">{{ $results['summary']['Low Urgency'] ?? 0 }}
+                                                <div style="color: #2ecc71;">
+                                                    {{ $results['summary']['Low Urgency'] ?? $results['summary']['low'] ?? 0 }}
                                                 </div>
                                             </div>
 
@@ -348,8 +118,12 @@
                                 </div>
 
                                 <div class="card-body">
-                                    <canvas id="featureImportanceChart"
-                                        style="max-height: 400px; width:100%; height:300px;"></canvas>
+                                    @if($hasFeatureImportance)
+                                        <canvas id="featureImportanceChart"
+                                            style="max-height: 400px; width:100%; height:300px;"></canvas>
+                                    @else
+                                        <p class="text-muted text-center">No feature importance data available</p>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -375,9 +149,19 @@
                                 </p>
                             </div>
 
+                            @php
+                                $highUrgencyCount = 0;
+                                if ($hasAnomalies) {
+                                    $highUrgencyCount = collect($results['anomalies'])
+                                        ->where('predicted_urgency', 'High Urgency')
+                                        ->where('predicted_urgency', 'high')
+                                        ->count();
+                                }
+                            @endphp
+
                             <span
                                 style="background-color: #e74c3c20; color:#e74c3c; padding:5px 14px; border-radius: 8px; font-weight:600;">
-                                {{ count($highUrgencyAnomalies ?? []) }} cases
+                                {{ $highUrgencyCount }} cases
                             </span>
                         </div>
 
@@ -386,42 +170,53 @@
                             style="background-color: #fafafa; border-radius: 20px; border: 1px solid #e6e6e6;">
 
                             @php
-                                $highUrgencyAnomalies = array_filter($results['anomalies'] ?? [], function ($row) {
-                                    return ($row['predicted_urgency'] ?? '') === 'High Urgency';
-                                });
+                                $highUrgencyAnomalies = [];
+                                if ($hasAnomalies) {
+                                    $highUrgencyAnomalies = array_filter($results['anomalies'], function ($row) {
+                                        return isset($row['predicted_urgency']) && 
+                                               (strtolower($row['predicted_urgency']) === 'high urgency' || 
+                                                strtolower($row['predicted_urgency']) === 'high');
+                                    });
+                                }
                             @endphp
 
                             @if (empty($highUrgencyAnomalies))
                                 <p class="text-muted">No high urgency cases found.</p>
                             @else
-                                <table class="table mb-0" style="font-size: 0.95rem;">
-                                    <thead>
-                                        <tr>
-                                            <th>Client ID</th>
-                                            <th>Barangay</th>
-                                            <th>Assistances</th>
-                                            <th>Total Amount</th>
-                                            <th>Urgency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($highUrgencyAnomalies as $row)
+                                <div class="table-responsive">
+                                    <table class="table mb-0" style="font-size: 0.95rem;">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $row['client_id'] }}</td>
-                                                <td>{{ $row['barangay'] }}</td>
-                                                <td>{{ $row['total_assistances'] }}</td>
-                                                <td>{{ $row['total_amount'] ? '₱' . number_format($row['total_amount'], 2) : 'N/A' }}
-                                                </td>
-                                                <td>
-                                                    <span
-                                                        style="background:#e74c3c; color:white; padding:5px 10px; border-radius: 8px; font-size: .85rem;">
-                                                        High
-                                                    </span>
-                                                </td>
+                                                <th>Client ID</th>
+                                                <th>Barangay</th>
+                                                <th>Assistances</th>
+                                                <th>Total Amount</th>
+                                                <th>Urgency</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($highUrgencyAnomalies as $row)
+                                                <tr>
+                                                    <td>{{ $row['client_id'] ?? $row['id'] ?? 'N/A' }}</td>
+                                                    <td>{{ $row['barangay'] ?? $row['baranggay'] ?? 'N/A' }}</td>
+                                                    <td>{{ $row['total_assistances'] ?? $row['assistances'] ?? 0 }}</td>
+                                                    <td>
+                                                        @php
+                                                            $amount = $row['total_amount'] ?? $row['amount'] ?? 0;
+                                                        @endphp
+                                                        {{ $amount ? '₱' . number_format($amount, 2) : 'N/A' }}
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            style="background:#e74c3c; color:white; padding:5px 10px; border-radius: 8px; font-size: .85rem;">
+                                                            High
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -431,154 +226,83 @@
         </section>
     </div>
 
-
-    @if ($results)
-        <script src="{{ asset('js/chart.js') }}"></script>
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+    @if (!empty($results) && isset($results['summary']))
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-            const rawSummary = @json($results['summary'] ?? []);
-            const rawImportance = @json($results['feature_importance'] ?? []);
+            document.addEventListener('DOMContentLoaded', function() {
+                try {
+                    const rawSummary = @json($results['summary'] ?? []);
+                    const rawImportance = @json($results['feature_importance'] ?? []);
 
-<<<<<<< HEAD
-            // Urgency Donut
-=======
-            /* ---------------------------------------------------
-               1) FIX SUMMARY KEYS (Always return 3 labels)
-            --------------------------------------------------- */
-            const summary = {
-                "High Urgency": rawSummary["High Urgency"] ?? 0,
-                "Medium Urgency": rawSummary["Medium Urgency"] ?? 0,
-                "Low Urgency": rawSummary["Low Urgency"] ?? 0
-            };
+                    // Always force 3 keys with safe defaults
+                    const summary = {
+                        "High Urgency": rawSummary["High Urgency"] ?? rawSummary["high"] ?? 0,
+                        "Medium Urgency": rawSummary["Medium Urgency"] ?? rawSummary["medium"] ?? 0,
+                        "Low Urgency": rawSummary["Low Urgency"] ?? rawSummary["low"] ?? 0
+                    };
 
-            /* ---------------------------------------------------
-               2) FIX FEATURE IMPORTANCE (Avoid empty/undefined)
-            --------------------------------------------------- */
-            let featureImportance = Array.isArray(rawImportance) ? rawImportance : [];
-
-            if (featureImportance.length === 0) {
-                featureImportance = [{
-                        feature: "total_assistances",
-                        importance: 0
-                    },
-                    {
-                        feature: "total_amount",
-                        importance: 0
-                    }
-                ];
-            } else {
-                // Replace broken values like "undefined"
-                featureImportance = featureImportance.map(f => ({
-                    feature: f.feature ?? "Unknown",
-                    importance: (typeof f.importance === "number" && !isNaN(f.importance)) ?
-                        f.importance :
-                        0
-                }));
-            }
-
-            /* ---------------------------------------------------
-               3) URGENCY DONUT CHART (Stable always)
-            --------------------------------------------------- */
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-            new Chart(document.getElementById('urgencySummaryChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: ["High", "Medium", "Low"],
-                    datasets: [{
-                        data: [
-<<<<<<< HEAD
-                            rawSummary["High Urgency"] ?? 0,
-                            rawSummary["Medium Urgency"] ?? 0,
-                            rawSummary["Low Urgency"] ?? 0
-                        ],
-                        backgroundColor: ["#ef4444", "#f59e0b", "#10b981"],
-                        hoverOffset: 15,
-                        borderWidth: 0
-=======
-                            summary["High Urgency"],
-                            summary["Medium Urgency"],
-                            summary["Low Urgency"]
-                        ],
-                        backgroundColor: [
-                            "#e74c3c", // red
-                            "#f39c12", // yellow
-                            "#2ecc71" // green
-                        ]
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-<<<<<<< HEAD
-                    cutout: '75%',
-=======
-                    cutout: "60%",
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-<<<<<<< HEAD
-            // Feature Importance Bar
-            new Chart(document.getElementById('featureImportanceChart'), {
-                type: 'bar',
-                data: {
-                    labels: rawImportance.map(f => f.feature.replace('_', ' ')),
-                    datasets: [{
-                        label: 'Importance Score',
-                        data: rawImportance.map(f => f.importance),
-                        backgroundColor: "#3b82f6",
-                        borderRadius: 8,
-=======
-            /* ---------------------------------------------------
-               4) FEATURE IMPORTANCE CHART (Safe always)
-            --------------------------------------------------- */
-            new Chart(document.getElementById('featureImportanceChart'), {
-                type: 'bar',
-                data: {
-                    labels: featureImportance.map(f => f.feature),
-                    datasets: [{
-                        data: featureImportance.map(f => f.importance),
-                        backgroundColor: "#3498db"
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-<<<<<<< HEAD
-                            beginAtZero: true,
-                            grid: {
-                                color: '#f1f5f9'
+                    // Urgency Donut Chart
+                    const urgencyCtx = document.getElementById('urgencySummaryChart');
+                    if (urgencyCtx) {
+                        new Chart(urgencyCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ["High", "Medium", "Low"],
+                                datasets: [{
+                                    data: [
+                                        summary["High Urgency"],
+                                        summary["Medium Urgency"],
+                                        summary["Low Urgency"]
+                                    ],
+                                    backgroundColor: ["#e74c3c", "#f39c12", "#2ecc71"]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                cutout: "60%",
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
                             }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-=======
-                            beginAtZero: true
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+                        });
                     }
+
+                    // Feature Importance Bar Chart
+                    const featureCtx = document.getElementById('featureImportanceChart');
+                    if (featureCtx && rawImportance && rawImportance.length > 0) {
+                        new Chart(featureCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: rawImportance.map(f => f.feature || 'Unknown'),
+                                datasets: [{
+                                    data: rawImportance.map(f => f.importance || 0),
+                                    backgroundColor: "#3498db"
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Chart initialization error:', error);
                 }
             });
         </script>
     @endif
-<<<<<<< HEAD
-=======
 
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
 @endsection

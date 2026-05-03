@@ -21,6 +21,11 @@ return new class extends Migration
 
            // $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
            // $table->unique(['client_id', 'requirement_key']);
+	 $table->id();
+    $table->unsignedBigInteger('client_id')->nullable();
+    $table->string('requirement_name')->nullable();
+    $table->boolean('is_submitted')->default(false);
+    $table->timestamps();
         });
     }
 
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Schema::dropIfExists('client_requirements');
+        Schema::dropIfExists('client_requirements');
     }
 };

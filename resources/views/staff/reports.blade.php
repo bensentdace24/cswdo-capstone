@@ -1,244 +1,17 @@
 @extends('layouts.app')
 
 @section('style')
-<<<<<<< HEAD
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        /* Global Background and Typography */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
-        }
-
-        .content-wrapper {
-            background-color: #f8fafc !important;
-            padding: 2rem 1.5rem;
-        }
-
-        h1 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            color: #0f172a;
-            font-size: 2.25rem;
-            letter-spacing: -0.025em;
-        }
-
-        /* Unified Action Bar (Top Filter Bar) */
-        .action-container {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 15px 25px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .custom-filter-select {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.875rem;
-            color: #475569;
-            min-width: 150px;
-            background-color: #f8fafc;
-        }
-
-        /* Modern Button Styles */
-        .btn-filter-apply {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 20px;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-
-        .btn-filter-apply:hover {
-            background-color: #2563eb;
-            transform: translateY(-1px);
-        }
-
-        .btn-filter-reset {
-            background-color: #ffffff;
-            color: #64748b;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 8px 15px;
-            font-weight: 500;
-            text-decoration: none;
-        }
-
-        .btn-action-outline {
-            background-color: #ffffff;
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .btn-action-primary {
-            background: linear-gradient(135deg, #1D4FA1 0%, #3b82f6 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .btn-action-primary:hover {
-            color: white;
-            box-shadow: 0 5px 15px rgba(29, 79, 161, 0.3);
-            transform: translateY(-1px);
-        }
-
-        /* Summary Cards */
-        .summary-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid #e2e8f0;
-            height: 100%;
-            transition: 0.2s;
-        }
-
-        .summary-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-
-        .summary-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-
-        .summary-value {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #1e293b;
-        }
-
-        /* Report Component Cards */
-        .report-card {
-            background: white;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .card-header-modern {
-            background-color: #ffffff !important;
-            border-bottom: 1px solid #f1f5f9;
-            padding: 1.25rem 1.5rem;
-        }
-
-        .chart-wrap {
-            height: 350px;
-            padding: 1.5rem;
-        }
-
-        .insight-box {
-            background: #eff6ff;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border-left: 5px solid #3b82f6;
-        }
-
-        /* AI Status Pulse Animation */
-        .ai-status-pulse {
-            width: 10px;
-            height: 10px;
-            background: #3b82f6;
-            border-radius: 50%;
-            box-shadow: 0 0 0 rgba(59, 130, 246, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }
-
-            70% {
-                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-            }
-        }
-
-        /* Segmented Control (The Toggle) */
-        .segmented-control {
-            position: relative;
-            display: flex;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            width: 280px;
-        }
-
-        .segmented-control input {
-            display: none;
-        }
-
-        .segmented-control label {
-            flex: 1;
-            text-align: center;
-            padding: 8px 0;
-            margin: 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #64748b;
-            cursor: pointer;
-            z-index: 2;
-            transition: color 0.3s ease;
-        }
-
-        .segmented-control input:checked+label {
-            color: #ffffff;
-        }
-
-        /* The sliding background pill */
-        .selection-slider {
-            position: absolute;
-            top: 4px;
-            left: 4px;
-            width: calc(50% - 4px);
-            height: calc(100% - 8px);
-            background: #3b82f6;
-            border-radius: 10px;
-            z-index: 1;
-            transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        }
-
-        #modePerson:checked~.selection-slider {
-            transform: translateX(100%);
-=======
     <style>
         /* Soft background and card styles (reduced contrast) */
         body {
             background-color: #f3f6fa;
+        }
+
+        h1 {
+            font-family: 'Arial', sans-serif;
+            font-weight: 700;
+            /* CORRECT: Retain #1f4e8a for Title/Summary Numbers */
+            color: #1f4e8a;
         }
 
         .report-card {
@@ -257,6 +30,7 @@
         .summary-value {
             font-size: 1.35rem;
             font-weight: 700;
+            /* CORRECT: Retain #1f4e8a for Title/Summary Numbers */
             color: #1f4e8a;
         }
 
@@ -265,313 +39,196 @@
             color: #576574;
         }
 
-        /* Make charts fit nicely */
+        /* * =============================================
+                                                                                                                                                                                                                                                                                                                                                                                      * CHART HEIGHT CLASSES
+                                                                                                                                                                                                                                                                                                                                                                                      * =============================================
+                                                                                                                                                                                                                                                                                                                                                                                    */
         .chart-wrap {
-            min-height: 260px;
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+            /* Container for Top 5 and Assistance Type charts */
+            height: 350px;
+            position: relative;
+        }
+
+        .kmeans-chart-container {
+            height: 400px;
+            position: relative;
+        }
+
+        /* * =============================================
+                                                                                                                                                                                                                                                                                                                                                                                      * CHART HEADER PATCH COLOR (#34495e)
+                                                                                                                                                                                                                                                                                                                                                                                      * =============================================
+                                                                                                                                                                                                                                                                                                                                                                                    */
+        .card-header.chart-header-blue {
+            /* FIXED: Using the requested color #34495e */
+            background-color: #34495e !important;
+            color: #fff;
+            border-bottom: none;
+            padding: 0.75rem 1.25rem;
+            margin: 0;
+        }
+
+        .card-header.chart-header-blue:first-child {
+            border-radius: calc(0.5rem - 1px) calc(0.5rem - 1px) 0 0;
+        }
+
+        .card-header.chart-header-blue h5 {
+            margin: 0;
+        }
+
+        /* Modern Select Redesign */
+        /* Modern Filter Bar Styles */
+        .report-filter-bar {
+            background: #ffffff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 5px 12px;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group:focus-within {
+            border-color: #34495e;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1);
+        }
+
+        .filter-group i {
+            color: #34495e;
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4a5568;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+        }
+
+        /* Action Buttons */
+        .btn-filter-primary {
+            background: #34495e;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-filter-primary:hover {
+            background: #2c3e50;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Specific K-Means Toggle Wrapper */
+        .kmeans-controls {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
         }
     </style>
 @endsection
 
 @section('content')
     <div class="content-wrapper">
-<<<<<<< HEAD
-        <div class="container-fluid">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-            {{-- Flash Messages --}}
-            @include('_message')
-
-            {{-- Header Section --}}
-            <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 mt-2">
-                <div>
-                    <p class="text-primary fw-bold mb-1"
-                        style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Intelligence Hub</p>
-                    <h1>Reports & Visualization</h1>
-                </div>
-                @if ($lastUpdated)
-                    <p class="text-muted mb-1" style="font-size: 0.85rem;">
-                        <i class="far fa-clock me-1"></i> Sync:
-                        {{ \Carbon\Carbon::parse($lastUpdated)->format('M d, g:i A') }}
-                    </p>
-                @endif
-            </div>
-
-            {{-- Unified Action Bar (Filters & Exports) --}}
-            <div class="action-container shadow-sm">
-                <form method="GET" action="{{ url()->current() }}" class="d-flex align-items-center gap-3 mb-0">
-                    <select name="barangay" class="form-select custom-filter-select">
-                        <option value="">All Barangays</option>
-                        @foreach ($barangayList as $b)
-                            <option value="{{ $b->barangay }}" {{ request('barangay') == $b->barangay ? 'selected' : '' }}>
-                                {{ $b->barangay }}</option>
-                        @endforeach
-                    </select>
-
-                    <select name="month" class="form-select custom-filter-select">
-                        <option value="">All Months</option>
-                        @for ($m = 1; $m <= 12; $m++)
-                            <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
-                                {{ \Carbon\Carbon::create()->month($m)->format('F') }}</option>
-                        @endfor
-                    </select>
-
-                    <select name="year" class="form-select custom-filter-select">
-                        <option value="">All Years</option>
-                        @for ($y = now()->year; $y >= now()->year - 5; $y--)
-                            <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
-                                {{ $y }}</option>
-                        @endfor
-                    </select>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn-filter-apply px-4">Filter</button>
-                        <a href="{{ route('staff.reports') }}" class="btn-filter-reset">Reset</a>
-                    </div>
-                </form>
-
-                <div class="d-flex align-items-center gap-2">
-                    <a href="{{ route('staff.reports.export') }}" class="btn-action-outline"><i
-                            class="fas fa-file-csv me-1"></i> Export CSV</a>
-                    <a href="{{ route('staff.updateAI') }}" class="btn-action-primary shadow-sm"><i
-                            class="fas fa-sync-alt me-1"></i> Update AI</a>
-                </div>
-            </div>
-
-            {{-- Summary Cards Row --}}
-            <div class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="summary-card shadow-sm">
-                        <div class="summary-label">Disbursement Total</div>
-                        <div class="summary-value text-primary">₱{{ number_format($totalAssistanceAmount, 2) }}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="summary-card shadow-sm">
-                        <div class="summary-label">Total Beneficiaries</div>
-                        <div class="summary-value">{{ number_format($totalBeneficiaries) }}</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="summary-card shadow-sm">
-                        <div class="summary-label">Top Barangay</div>
-                        <div class="summary-value text-uppercase" style="font-size: 1.4rem;">{{ $topBarangayName }}</div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Charts Row --}}
-            <div class="row g-4 mb-4">
-                <div class="col-lg-6">
-                    <div class="report-card">
-                        <div class="card-header-modern">
-                            <h5><i class="fas fa-chart-bar me-2 text-primary"></i> Priority Barangays</h5>
-                        </div>
-                        <div class="chart-wrap"><canvas id="topBarangaysChart"></canvas></div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="report-card">
-                        <div class="card-header-modern">
-                            <h5><i class="fas fa-chart-pie me-2 text-primary"></i> Support Type Split</h5>
-                        </div>
-                        <div class="chart-wrap"><canvas id="assistanceTypeChart"></canvas></div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- AI Clustering Intelligence Section --}}
-            <div class="report-card mb-4 shadow-sm">
-                <div class="card-header-modern d-flex align-items-center justify-content-between p-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="ai-status-pulse"></div>
-                        <h5 class="mb-0 fw-bold">AI Clustering Intelligence</h5>
+                    <div>
+                        <h1 class="m-0 fw-bold">Reports & Visualization</h1>
                     </div>
 
-                    <div class="d-flex align-items-center gap-3">
-                        {{-- Premium Toggle --}}
-                        <div class="segmented-control">
-                            <input type="radio" name="mode" value="barangay" id="modeBarangay" checked>
-                            <label for="modeBarangay">By Barangay</label>
-                            <input type="radio" name="mode" value="person" id="modePerson">
-                            <label for="modePerson">By Person</label>
-                            <div class="selection-slider"></div>
-                        </div>
-
-                        {{-- Barangay Selector (Only for Person Mode) --}}
-                        <div id="personBarangayWrapper" style="display: none;">
-                            <select id="personBarangaySelect" class="custom-filter-select"
-                                style="min-width: 220px; border: 1px solid #3b82f6; background-color: #eff6ff;">
-                                <option value="">Choose Barangay...</option>
+                    <form method="GET" action="{{ route('staff.reports') }}" class="report-filter-bar mb-4">
+                        {{-- Barangay Filter --}}
+                        <div class="filter-group">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <select name="barangay" id="barangayFilter" class="filter-select">
+                                <option value="">Full Distribution</option>
                                 @foreach ($barangayList as $b)
-                                    @php
-                                        $originalName = strtoupper($b->barangay);
-
-                                        // 1. Specific Fix for Sto. Niño variants
-                                        if (
-                                            str_contains($originalName, 'STO. NIÑO') ||
-                                            str_contains($originalName, 'SANTO NIÑO')
-                                        ) {
-                                            $safe = 'STO_NINO';
-                                        }
-                                        // 2. General logic for everyone else (Gredu, Lower Panaga, etc.)
-                                        else {
-                                            // Remove parentheses content but keep the main name
-                                            // Example: "GREDU (POBLACION)" -> "GREDU"
-                                            $safe = preg_replace('/\s*\(.*?\)\s*/', '', $originalName);
-
-                                            // Clean up special characters
-                                            $safe = str_replace(['.', 'Ñ'], ['', 'N'], $safe);
-
-                                            // Replace spaces with underscores
-                                            $safe = preg_replace('/\s+/', '_', trim($safe));
-                                        }
-                                    @endphp
-                                    <option value="{{ $safe }}">{{ $b->barangay }}</option>
+                                    <option value="{{ $b }}" {{ request('barangay') == $b ? 'selected' : '' }}>
+                                        {{ $b }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
+
+                        {{-- Month Filter --}}
+                        <div class="filter-group">
+                            <i class="fas fa-calendar-alt"></i>
+                            <select name="month" class="filter-select">
+                                <option value="">All Months</option>
+                                @for ($m = 1; $m <= 12; $m++)
+                                    <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        {{-- Year Filter --}}
+                        <div class="filter-group">
+                            <i class="fas fa-history"></i>
+                            <select name="year" class="filter-select">
+                                <option value="">All Years</option>
+                                @for ($y = now()->year; $y >= now()->year - 10; $y--)
+                                    <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                        {{ $y }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-filter-primary">
+                            <i class="fas fa-filter me-1"></i> Apply Filter
+                        </button>
+
+                        <a href="{{ route('staff.reports') }}"
+                            class="btn btn-light border btn-sm py-2 px-3 fw-bold text-muted" style="border-radius: 8px;">
+                            <i class="fas fa-undo me-1"></i> Reset
+                        </a>
+                    </form>
+
+
+                    <div class="text-end">
+
+                        <div class="mb-2">
+                            {{-- <a href="{{ route('staff.updateAI') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-sync-alt me-1"></i> Update Analytics
+                            </a> --}}
+                            <a href="{{ route('staff.reports.export') }}" class="btn btn-outline-primary btn-sm ms-2">
+                                <i class="fas fa-file-csv me-1"></i> Export CSV Report
+                            </a>
+                        </div>
+
+                        @if ($lastUpdated)
+                            <p class="text-muted" style="font-size: 14px;">
+                                🕒 Last Updated:
+                                {{ \Carbon\Carbon::parse($lastUpdated)->format('F d, Y h:i A') }}
+                            </p>
+                        @endif
+
                     </div>
                 </div>
-                <div class="card-body p-4">
-                    <div style="height: 400px;"><canvas id="kmeansChart"></canvas></div>
-                    <div class="insight-box mt-4" id="insightsText">
-                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div> Assessing
-                        records...
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
-@section('script')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
-    <script src="{{ asset('js/chartjs-plugin-datalabels@2.js') }}"></script>
-
-    <script>
-        const palette = {
-            blue: '#3b82f6',
-            orange: '#f97316',
-            green: '#10b981',
-            yellow: '#facc15',
-            red: '#ef4444'
-        };
-        let currentChart = null;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Priority Barangays Horizontal Bar
-            new Chart(document.getElementById('topBarangaysChart'), {
-                type: 'bar',
-                data: {
-                    labels: @json($topBarangays->pluck('barangay')),
-                    datasets: [{
-                        data: @json($topBarangays->pluck('total_assistances')),
-                        backgroundColor: palette.blue,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-            // Assistance Type Doughnut
-            new Chart(document.getElementById('assistanceTypeChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: @json($assistanceTypeData->pluck('type')),
-                    datasets: [{
-                        data: @json($assistanceTypeData->pluck('total')),
-                        backgroundColor: [palette.blue, palette.orange, palette.green, palette
-                            .yellow
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-
-            // --- AI Clustering Logic ---
-            const barangayRadio = document.getElementById('modeBarangay');
-            const personRadio = document.getElementById('modePerson');
-            const barangayWrapper = document.getElementById('personBarangayWrapper');
-            const personSelect = document.getElementById('personBarangaySelect');
-
-            loadClusterData('barangay');
-
-            function handleModeChange() {
-                if (personRadio.checked) {
-                    barangayWrapper.style.display = 'block';
-                    document.getElementById('insightsText').innerHTML =
-                        "Select a barangay to analyze specific person clusters.";
-                    if (currentChart) currentChart.destroy();
-                } else {
-                    barangayWrapper.style.display = 'none';
-                    loadClusterData('barangay');
-                }
-            }
-
-            barangayRadio.addEventListener('change', handleModeChange);
-            personRadio.addEventListener('change', handleModeChange);
-            personSelect.addEventListener('change', function() {
-                if (this.value !== '') loadClusterData('person', this.value);
-            });
-        });
-
-        async function loadClusterData(mode = 'barangay', barangayKey = '') {
-            let url = mode === 'person' ? `/python/cluster_results_tx_${barangayKey}.json?v=` + Date.now() :
-                "/python/cluster_results.json?v=" + Date.now();
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("JSON Missing");
-                const data = await response.json();
-                renderKMeans(data, mode);
-            } catch (err) {
-                document.getElementById('insightsText').innerHTML = "Data not yet available for this selection.";
-                if (currentChart) currentChart.destroy();
-            }
-        }
-
-        function renderKMeans(clusterData, mode = 'barangay') {
-            const ctx = document.getElementById('kmeansChart').getContext('2d');
-            if (currentChart) currentChart.destroy();
-
-            const colors = {
-                "High Need": palette.red,
-                "Medium Need": palette.yellow,
-                "Low Need": palette.green
-            };
-
-            currentChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: mode === 'barangay' ?
-                        clusterData.map(item => ({
-=======
-        <section class="content-header">
-            <div class="container-fluid d-flex justify-content-between align-items-center">
-                <h1 class="m-0">Reports & Visualization</h1>
-            </div>
-            <div class="mb-3 text-right">
-                <a href="{{ route('staff.reports.export') }}" class="btn btn-primary shadow-sm rounded-pill px-4">
-                    <i class="fas fa-file-csv"></i> Export CSV Report
-                </a>
             </div>
         </section>
 
@@ -581,7 +238,7 @@
             <div class="container-fluid">
                 @include('_message')
 
-                <!-- Summaries -->
+                {{-- Summary Cards (Text color is #1f4e8a) --}}
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <div class="summary-card">
@@ -608,287 +265,464 @@
                     </div>
                 </div>
 
-                <!-- Charts row -->
+                {{-- Row with Top 5 and Distribution Charts (Header is #34495e) --}}
                 <div class="row">
-                    <!-- Top 5 Barangays -->
                     <div class="col-lg-6 mb-4">
-                        <div class="card report-card p-3">
-                            <div class="card-header border-0 pb-0">
-                                <h5 class="mb-0">Top 5 Barangays (by beneficiaries)</h5>
+                        <div class="card report-card">
+                            <div class="card-header chart-header-blue">
+                                <h5 class="mb-0"><i class="fas fa-chart-bar mr-2"></i> Top 5 Barangays (by beneficiaries)
+                                </h5>
                             </div>
-                            <div class="card-body chart-wrap">
+                            <div class="card-body chart-wrap p-3">
                                 <canvas id="topBarangaysChart"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Assistance Type (pie) -->
                     <div class="col-lg-6 mb-4">
-                        <div class="card report-card p-3">
-                            <div class="card-header border-0 pb-0">
-                                <h5 class="mb-0">Assistance Type Distribution</h5>
+                        <div class="card report-card">
+                            <div class="card-header chart-header-blue">
+                                <h5 class="mb-0"><i class="fas fa-chart-pie mr-2"></i> Assistance Type Distribution</h5>
                             </div>
-                            <div class="card-body chart-wrap">
+                            <div class="card-body chart-wrap p-3">
                                 <canvas id="assistanceTypeChart"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Monthly Trend -->
+                    {{-- Monthly Trend Chart (Header is #34495e) --}}
                     <div class="col-12 mb-4">
-                        <div class="card report-card p-3">
-                            <div class="card-header border-0 pb-0">
-                                <h5 class="mb-0">Monthly Assistance Trend (last 12 months)</h5>
+                        <div class="card report-card">
+                            <div class="card-header chart-header-blue">
+                                <h5 class="mb-0"><i class="fas fa-chart-line mr-2"></i> Monthly Assistance Trend (last 12
+                                    months)</h5>
                             </div>
-                            <div class="card-body">
-                                <canvas id="monthlyTrendChart" style="min-height: 220px;"></canvas>
+                            <div class="card-body p-3" style="height: 300px; position: relative;">
+                                <canvas id="monthlyTrendChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {{-- System Insights Summary --}}
+                <div class="card report-card mb-4">
+                    <div class="card-header border-0 pb-0">
+                        <h5 class="mb-0">System Insights Summary</h5>
+                    </div>
+                    <div class="card-body text-muted">
+                        @php
+                            $totalEntries = $barangayData->sum('total_assistances');
+                            $topBarangay = $topBarangayName ?? '—';
+                            $topBarangayPercent =
+                                $totalEntries > 0 ? round(($topBarangayCount / $totalEntries) * 100, 1) : 0;
+
+                            $topType = $assistanceTypeData->first()->type ?? '—';
+                            $topTypeCount = $assistanceTypeData->first()->total ?? 0;
+                            $totalTypeCount = $assistanceTypeData->sum('total');
+                            $topTypePercent =
+                                $totalTypeCount > 0 ? round(($topTypeCount / $totalTypeCount) * 100, 1) : 0;
+
+                            $latestMonth = $monthlyTrend->last()->month ?? '—';
+                            $latestMonthCount = $monthlyTrend->last()->total ?? 0;
+                            $prevMonthCount =
+                                $monthlyTrend->count() > 1 ? $monthlyTrend[$monthlyTrend->count() - 2]->total : 0;
+                            $monthChange =
+                                $prevMonthCount > 0
+                                    ? round((($latestMonthCount - $prevMonthCount) / $prevMonthCount) * 100, 1)
+                                    : 0;
+                        @endphp
+
+                        <p class="mb-2">
+                            <strong>Overall Summary:</strong><br>
+                            The system recorded a total of <strong>{{ number_format($totalEntries) }}</strong> assistance
+                            entries across all barangays.
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Top Barangay:</strong><br>
+                            <strong>{{ $topBarangay }}</strong> has the highest number of assistance records,
+                            accounting for approximately <strong>{{ $topBarangayPercent }}%</strong> of all beneficiaries.
+                        </p>
+
+                        <p class="mb-2">
+                            <strong>Most Common Assistance Type:</strong><br>
+                            <strong>{{ $topType }}</strong> assistance is the most frequently availed service,
+                            representing <strong>{{ $topTypePercent }}%</strong> of all recorded transactions.
+                        </p>
+
+                        <p class="mb-0">
+                            <strong>Recent Trend:</strong><br>
+                            In <strong>{{ $latestMonth }}</strong>, there were
+                            <strong>{{ $latestMonthCount }}</strong> recorded assistance cases.
+                            This represents a
+                            @if ($monthChange > 0)
+                                <span class="text-success">+{{ $monthChange }}%</span> increase
+                            @elseif($monthChange < 0)
+                                <span class="text-danger">{{ $monthChange }}%</span> decrease
+                            @else
+                                no change
+                            @endif
+                            compared to the previous month.
+                        </p>
+                    </div>
+                </div>
+                <div class="text-right mt-3">
+                    <a href="{{ route('staff.reports.exportCluster') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-download"></i> Export K-Means Results (CSV)
+                    </a>
+                </div>
+                <div class="d-flex gap-3 mb-3 align-items-center">
+
+                    </select>
+                </div>
+
             </div>
-            <!-- Automated Insights Summary -->
-            <div class="card report-card mb-4">
-                <div class="card-header border-0 pb-0">
-                    <h5 class="mb-0">System Insights Summary</h5>
+
+
+            {{-- K-Means Controls --}}
+            <div class="kmeans-controls mb-3">
+                <div class="filter-group" style="width: 280px; background: white;">
+                    <i class="fas fa-bullseye" style="color: #e74c3c;"></i>
+                    <span style="font-size: 0.75rem; font-weight: 800; color: #34495e; margin-right: 5px;">
+                        CLUSTER VIEW:
+                    </span>
+                    <select id="kmeansBarangayFilter" class="filter-select">
+                        <option value="">Full Distribution</option>
+                        @foreach ($barangayList as $b)
+                            <option value="{{ $b }}">{{ $b }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="card shadow-sm report-card">
+                <div class="card-header chart-header-blue">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-project-diagram mr-2"></i> Barangay Need Clustering
+                    </h5>
                 </div>
                 <div class="card-body">
-                    @php
-                        $totalEntries = $barangayData->sum('total_assistances');
-                        $topBarangay = $topBarangayName ?? '—';
-                        $topBarangayPercent =
-                            $totalEntries > 0 ? round(($topBarangayCount / $totalEntries) * 100, 1) : 0;
-
-                        $topType = $assistanceTypeData->first()->type ?? '—';
-                        $topTypeCount = $assistanceTypeData->first()->total ?? 0;
-                        $totalTypeCount = $assistanceTypeData->sum('total');
-                        $topTypePercent = $totalTypeCount > 0 ? round(($topTypeCount / $totalTypeCount) * 100, 1) : 0;
-
-                        $latestMonth = $monthlyTrend->last()->month ?? '—';
-                        $latestMonthCount = $monthlyTrend->last()->total ?? 0;
-                        $prevMonthCount =
-                            $monthlyTrend->count() > 1 ? $monthlyTrend[$monthlyTrend->count() - 2]->total : 0;
-                        $monthChange =
-                            $prevMonthCount > 0
-                                ? round((($latestMonthCount - $prevMonthCount) / $prevMonthCount) * 100, 1)
-                                : 0;
-                    @endphp
-
-                    <p class="mb-2">
-                        <strong>Overall Summary:</strong><br>
-                        The system recorded a total of <strong>{{ number_format($totalEntries) }}</strong> assistance
-                        entries across all barangays.
-                    </p>
-
-                    <p class="mb-2">
-                        <strong>Top Barangay:</strong><br>
-                        <strong>{{ $topBarangay }}</strong> has the highest number of assistance records,
-                        accounting for approximately <strong>{{ $topBarangayPercent }}%</strong> of all beneficiaries.
-                    </p>
-
-                    <p class="mb-2">
-                        <strong>Most Common Assistance Type:</strong><br>
-                        <strong>{{ $topType }}</strong> assistance is the most frequently availed service,
-                        representing <strong>{{ $topTypePercent }}%</strong> of all recorded transactions.
-                    </p>
-
-                    <p class="mb-0">
-                        <strong>Recent Trend:</strong><br>
-                        In <strong>{{ $latestMonth }}</strong>, there were
-                        <strong>{{ $latestMonthCount }}</strong> recorded assistance cases.
-                        This represents a
-                        @if ($monthChange > 0)
-                            <span class="text-success">+{{ $monthChange }}%</span> increase
-                        @elseif($monthChange < 0)
-                            <span class="text-danger">{{ $monthChange }}%</span> decrease
-                        @else
-                            no change
-                        @endif
-                        compared to the previous month.
-                    </p>
-                </div>
-            </div>
-
-            <div class="text-right mt-3">
-                <a href="{{ route('staff.reports.exportCluster') }}" class="btn btn-outline-primary">
-                    <i class="fas fa-download"></i> Export K-Means Results (CSV)
-                </a>
-            </div>
-
-            <!-- K-Means Clustering Visualization -->
-            <div class="row mt-4">
-                <div class="col-md-12 mb-4">
-                    <div class="card shadow-sm report-card">
-                        <div class="card-header" style="background-color: #1D4FA1; color: #fff;">
-                            <h5 class="card-title mb-0"><i class="fas fa-project-diagram mr-2"></i> Barangay Need Clustering
-                                (K-Means Visualization)</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="kmeansChart" height="120"></canvas>
-                            <hr>
-                            <div id="insightsText" class="mt-3 text-muted" style="font-size: 1.05rem;"></div>
-                        </div>
+                    <div class="kmeans-chart-container">
+                        <canvas id="kmeansChart"></canvas>
                     </div>
+                    <hr>
+                    <div id="insightsText" class="mt-3 text-muted" style="font-size: 1.05rem;"></div>
                 </div>
             </div>
+    </div>
+    </div>
+    <script src="{{ asset('js/chart.min.js') }}"></script>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", async () => {
-                    try {
-                        const response = await fetch("{{ asset('python/cluster_results.json') }}");
-                        const clusterData = await response.json();
+    <script>
+        let kmeansChart = null;
 
-                        const colors = {
-                            "High Need": "#e74c3c",
-                            "Medium Need": "#f1c40f",
-                            "Low Need": "#2ecc71"
-                        };
+        document.addEventListener("DOMContentLoaded", () => {
+            const brgyFilter = document.getElementById('kmeansBarangayFilter');
 
-                        const datasets = clusterData.map(item => ({
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
-                            label: item.barangay,
-                            data: [{
-                                x: item.total_assistances,
-                                y: item.total_amount
-                            }],
-<<<<<<< HEAD
-                            backgroundColor: colors[item.cluster_label] || palette.blue,
-                            pointRadius: 10
-                        })) : [{
-                            label: 'Records',
-                            data: clusterData.map((item, i) => ({
-                                x: i + 1,
-                                y: item.total_amount,
-                                cluster: item.cluster_label
-                            })),
-                            pointBackgroundColor: clusterData.map(item => colors[item.cluster_label] || palette
-                                .blue),
-                            pointRadius: 6
-                        }]
+            function normalizeBarangay(name) {
+                if (!name) return '';
+
+                // COMPLETE MAPPING based on your controller barangay list
+                const mapping = {
+                    // A.O. FLORIENDO variations
+                    'A O FLORIENDO': 'A._O._FLOIRENDO',
+                    'A O FLOIRENDO': 'A._O._FLOIRENDO',
+                    'A.O. FLORIENDO': 'A._O._FLOIRENDO',
+                    'A. O. FLORIENDO': 'A._O._FLOIRENDO',
+
+                    // J.P. LAUREL variations
+                    'JP LAUREL': 'J.P._LAUREL',
+                    'J.P. LAUREL': 'J.P._LAUREL',
+                    'J P LAUREL': 'J.P._LAUREL',
+                    'J. P. LAUREL': 'J.P._LAUREL',
+
+                    // ALL BARANGAYS FROM YOUR CONTROLLER
+                    'BUENAVISTA': 'BUENAVISTA',
+                    'CACAO': 'CACAO',
+                    'CAGANGOHAN': 'CAGANGOHAN',
+                    'CONSOLACION': 'CONSOLACION',
+                    'DAPCO': 'DAPCO',
+                    'DATU ABDUL DADIA': 'DATU_ABDUL_DADIA',
+                    'GREDU': 'GREDU',
+                    'KASILAK': 'KASILAK',
+                    'KATIPUNAN': 'KATIPUNAN',
+                    'KATUALAN': 'KATUALAN',
+                    'KAUSWAGAN': 'KAUSWAGAN',
+                    'KIOTOY': 'KIOTOY',
+                    'LITTLE PANAY': 'LITTLE_PANAY',
+                    'LOWER PANAGA': 'LOWER_PANAGA',
+                    'MABUNAO': 'MABUNAO',
+                    'MADUAO': 'MADUAO',
+                    'MALATIVAS': 'MALATIVAS',
+                    'MANAY': 'MANAY',
+                    'NANYO': 'NANYO',
+                    'NEW MALAGA': 'NEW_MALAGA',
+                    'NEW MALITBOG': 'NEW_MALITBOG',
+                    'NEW PANDAN': 'NEW_PANDAN',
+                    'NEW VISAYAS': 'NEW_VISAYAS',
+                    'QUEZON': 'QUEZON',
+                    'SALVACION': 'SALVACION',
+                    'SAN FRANCISCO': 'SAN_FRANCISCO',
+                    'SAN NICOLAS': 'SAN_NICOLAS',
+                    'SAN PEDRO': 'SAN_PEDRO',
+                    'SAN ROQUE': 'SAN_ROQUE',
+                    'SAN VICENTE': 'SAN_VICENTE',
+                    'SANTA CRUZ': 'SANTA_CRUZ',
+                    'SANTO NIÑO': 'SANTO_NIÑO',
+                    'SANTO NINO': 'SANTO_NIÑO',
+                    'SINDATON': 'SINDATON',
+                    'SOUTHERN DAVAO': 'SOUTHERN_DAVAO',
+                    'TAGPORE': 'TAGPORE',
+                    'TIBUNGOL': 'TIBUNGOL',
+                    'UPPER LICANAN': 'UPPER_LICANAN',
+                    'WATERFALL': 'WATERFALL',
+                };
+
+                const trimmed = name.trim().toUpperCase();
+                console.log(`Normalizing: "${trimmed}"`);
+
+                // Return mapped value if exists
+                if (mapping[trimmed]) {
+                    console.log(`✅ Using mapped filename: ${mapping[trimmed]}`);
+                    return mapping[trimmed];
+                }
+
+                // Try without spaces
+                const noSpaces = trimmed.replace(/\s+/g, '_');
+                if (mapping[noSpaces]) {
+                    console.log(`✅ Using mapped filename (no spaces): ${mapping[noSpaces]}`);
+                    return mapping[noSpaces];
+                }
+
+                console.log(`⚠️ No mapping found for: ${trimmed}`);
+                return noSpaces;
+            }
+
+            function loadAndRender() {
+                const selectedBrgy = brgyFilter.value;
+
+                console.log("=== LOADING BARANGAY DATA ===");
+                console.log("Selected:", selectedBrgy);
+
+                if (!selectedBrgy) {
+                    // Load full distribution
+                    fetch("/python/cluster_results.json?v=" + Date.now())
+                        .then(res => {
+                            if (!res.ok) throw new Error("HTTP " + res.status);
+                            return res.json();
+                        })
+                        .then(data => renderKMeans(data, selectedBrgy))
+                        .catch(err => {
+                            console.error("Full distribution error:", err);
+                            document.getElementById('insightsText').innerHTML =
+                                '<span class="text-danger">No full distribution data found.</span>';
+                            if (kmeansChart) kmeansChart.destroy();
+                        });
+                    return;
+                }
+
+                // Get the filename from mapping
+                const filename = normalizeBarangay(selectedBrgy);
+                const url = `/python/cluster_results_${filename}.json?v=` + Date.now();
+
+                console.log("Attempting to load:", url);
+
+                fetch(url)
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log(`✅ Successfully loaded data for ${selectedBrgy}`);
+                        renderKMeans(data, selectedBrgy);
+                    })
+                    .catch(err => {
+                        console.log(`Individual file not found, trying to extract from full distribution...`);
+
+                        // FALLBACK: Try to extract from full distribution
+                        fetch("/python/cluster_results.json?v=" + Date.now())
+                            .then(res => res.json())
+                            .then(fullData => {
+                                // Find the barangay in the full distribution
+                                const barangayData = fullData.find(item =>
+                                    item.barangay?.toUpperCase() === selectedBrgy.toUpperCase()
+                                );
+
+                                if (barangayData) {
+                                    console.log("Found barangay in full distribution:", barangayData);
+
+                                    // Create a mock transaction from the summary data
+                                    const mockTransactions = [{
+                                        transaction_id: 1,
+                                        amount: barangayData.total_amount,
+                                        cluster: barangayData.cluster_label,
+                                        assistances: barangayData.total_assistances
+                                    }];
+
+                                    renderKMeans(mockTransactions, selectedBrgy);
+                                } else {
+                                    // Show friendly message if not found
+                                    document.getElementById('insightsText').innerHTML =
+                                        `<span class="text-warning">
+                                <strong>${selectedBrgy}</strong> has no transaction data yet.<br>
+                                <small class="text-muted">Please ask Admin to run clustering for detailed per-transaction view.</small>
+                            </span>`;
+
+                                    const canvas = document.getElementById('kmeansChart');
+                                    const ctx = canvas.getContext('2d');
+                                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                    ctx.font = '14px Arial';
+                                    ctx.fillStyle = '#666';
+                                    ctx.textAlign = 'center';
+                                    ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
+                                }
+                            })
+                            .catch(fallbackErr => {
+                                console.error("Fallback error:", fallbackErr);
+                                document.getElementById('insightsText').innerHTML =
+                                    `<span class="text-danger">Could not load data for ${selectedBrgy}.</span>`;
+                            });
+                    });
+            }
+
+            brgyFilter.addEventListener('change', loadAndRender);
+
+            // Initial load
+            loadAndRender();
+        });
+
+        function renderKMeans(clusterData, selectedBrgy = "") {
+            const colors = {
+                "High Need": "#e74c3c",
+                "Medium Need": "#f1c40f",
+                "Low Need": "#2ecc71"
+            };
+
+            let points = [];
+
+            if (!selectedBrgy) {
+                // FULL DISTRIBUTION
+                points = clusterData.map(item => ({
+                    x: Number(item.total_assistances || item.assistances || 0),
+                    y: Number(item.total_amount || item.amount || 0),
+                    _label: item.barangay || item.name || "Unknown",
+                    _cluster: item.cluster_label || item.cluster || "Unknown"
+                }));
+            } else {
+                // PER BARANGAY
+                points = clusterData.map((item, index) => ({
+                    x: index + 1,
+                    y: Number(item.amount ?? item.total_amount ?? 0),
+                    _cluster: item.cluster_label || item.cluster || "Unknown",
+                    _tx: item.transaction_id ?? index + 1
+                }));
+            }
+
+            if (!points || points.length === 0) {
+                document.getElementById('insightsText').innerHTML =
+                    `<span class="text-warning">No transaction data found for ${selectedBrgy || 'selected view'}.</span>`;
+                if (kmeansChart) kmeansChart.destroy();
+                return;
+            }
+
+            const ctx = document.getElementById('kmeansChart').getContext('2d');
+
+            if (kmeansChart) {
+                kmeansChart.destroy();
+            }
+
+            kmeansChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: selectedBrgy || 'All Barangays',
+                        data: points,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        backgroundColor: points.map(p => colors[p._cluster] || "#3498db")
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const p = context.raw;
+                                    if (!selectedBrgy) {
+                                        return `${p._label} — Assistances: ${p.x}, Amount: ₱${Number(p.y).toLocaleString()} (${p._cluster})`;
+                                    } else {
+                                        return `TX ${p._tx} — ₱${Number(p.y).toLocaleString()} (${p._cluster})`;
+                                    }
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             title: {
                                 display: true,
-                                text: mode === 'barangay' ? 'Assistance Count' : 'Record Index'
-                            }
+                                text: selectedBrgy ? 'Transaction Index' : 'Total Assistances'
+                            },
+                            beginAtZero: true
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Total Funds (₱)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-=======
-                            backgroundColor: colors[item.cluster_label] || "#3498db",
-                            pointRadius: 8,
-                            pointHoverRadius: 10
-                        }));
-
-                        const ctx = document.getElementById('kmeansChart').getContext('2d');
-                        new Chart(ctx, {
-                            type: 'scatter',
-                            data: {
-                                datasets
+                                text: 'Amount (₱)'
                             },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function(context) {
-                                                const d = context.raw;
-                                                const barangay = context.dataset.label;
-                                                const cluster = clusterData.find(x => x.barangay ===
-                                                    barangay)?.cluster_label || 'Unknown';
-                                                return `${barangay} (${cluster}) — Assistances: ${d.x}, Amount: ₱${d.y.toLocaleString()}`;
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        display: false
-                                    },
-                                    title: {
-                                        display: true,
-                                        text: 'Clustering of Barangays Based on Assistance Volume and Amount',
-                                        font: {
-                                            size: 18
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Total Assistances'
-                                        }
-                                    },
-                                    y: {
-                                        title: {
-                                            display: true,
-                                            text: 'Total Amount (₱)'
-                                        },
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-
-                        const highNeed = clusterData.filter(x => x.cluster_label === "High Need").length;
-                        const medNeed = clusterData.filter(x => x.cluster_label === "Medium Need").length;
-                        const lowNeed = clusterData.filter(x => x.cluster_label === "Low Need").length;
-                        const total = clusterData.length;
-
-                        const topBarangay = clusterData.reduce((a, b) =>
-                            a.total_amount + a.total_assistances > b.total_amount + b.total_assistances ? a : b
-                        );
-
-                        document.getElementById('insightsText').innerHTML = `
-            <strong>Insights Summary:</strong><br>
-            • Out of <strong>${total}</strong> barangays, <strong>${highNeed}</strong> are categorized as <span style="color:#e74c3c;">High Need</span>.<br>
-            • Barangay <strong>${topBarangay.barangay}</strong> shows the highest total assistance demand (₱${topBarangay.total_amount.toLocaleString()} across ${topBarangay.total_assistances} assistances).<br>
-            • These insights help prioritize areas that require urgent welfare support.
-        `;
-                    } catch (error) {
-                        console.error("Error loading cluster data:", error);
+                            beginAtZero: true
+                        }
                     }
-                });
-            </script>
+                }
+            });
+
+            if (!selectedBrgy) {
+                document.getElementById('insightsText').innerHTML =
+                    `<strong>Showing ${clusterData.length}</strong> barangay(s) (summary view).`;
+            } else {
+                document.getElementById('insightsText').innerHTML =
+                    `<strong>${selectedBrgy}:</strong> Showing <strong>${clusterData.length}</strong> transaction(s).`;
+            }
+        }
+    </script>
 
 
-        </section>
+    </div>
+    </section>
     </div>
 @endsection
 
 @section('script')
-    <!-- Chart.js + DataLabels -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="{{ asset('js/chart.min.js') }}"></script>
+    <script src="{{ asset('js/chartjs-plugin-datalabels@2.js') }}"></script>
 
     <script>
         const topBarangayLabels = @json($topBarangays->pluck('barangay'));
         const topBarangayCounts = @json($topBarangays->pluck('total_assistances'));
         const topBarangayAmounts = @json($topBarangays->pluck('total_amount'));
         const assistanceLabels = @json($assistanceTypeData->pluck('type'));
-        const assistanceCounts = @json($assistanceTypeData->pluck('total')); // Ensure monthly labels are ordered in controller
+        const assistanceCounts = @json($assistanceTypeData->pluck('total'));
         const monthlyLabels = @json($monthlyTrend->pluck('month'));
         const monthlyTotals = @json($monthlyTrend->pluck('total'));
 
         // Soft color palette
         const palette = {
-            blue: '#3b82c4', // primary
-            teal: '#2aa198',
+            // Reverting this to the color that gives the correct Pharmacy/Bar chart look
+            blue: '#3b82c4',
+            // CORRECTED: Explicitly defined 'teal' as the requested orange for the Medical slice
+            teal: '#d97027',
             warm: '#f6b042',
             green: '#4caf50',
             mutedGray: '#9aa6b2'
         };
+
+        // NOTE: The K-Means points are NOT using this palette, they use their own defined colors.
+        // However, the Top 5 and Monthly charts rely on palette.blue.
 
         // Top 5 Barangays (horizontal bar)
         (function() {
@@ -900,7 +734,7 @@
                     datasets: [{
                         label: 'Entries',
                         data: topBarangayCounts,
-                        backgroundColor: palette.blue,
+                        backgroundColor: palette.blue, // Uses '#3b82c4'
                         borderRadius: 6,
                         barThickness: 26
                     }]
@@ -908,6 +742,7 @@
                 options: {
                     indexAxis: 'y',
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: false
@@ -919,15 +754,6 @@
                             formatter: v => v,
                             font: {
                                 weight: '600'
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const i = context.dataIndex;
-                                    const amt = topBarangayAmounts[i] ?? 0;
-                                    return `Entries: ${context.raw} — Total: ₱${Number(amt).toFixed(2)}`;
-                                }
                             }
                         }
                     },
@@ -949,9 +775,13 @@
             });
         })();
 
-        // Assistance Type pie chart
+        // Assistance Type pie chart (MODIFIED)
         (function() {
             const ctx = document.getElementById('assistanceTypeChart').getContext('2d');
+
+            // This array defines the color order: [Pharmacy, Medical, ...]
+            // The first slice (Pharmacy) uses palette.blue ('#3b82c4').
+            // The second slice (Medical) uses palette.teal ('#d97027').
             const colors = [palette.blue, palette.teal, palette.warm, palette.green];
             new Chart(ctx, {
                 type: 'pie',
@@ -964,6 +794,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -987,7 +818,6 @@
                 plugins: [ChartDataLabels]
             });
         })();
-
         // Monthly trend
         (function() {
             const ctx = document.getElementById('monthlyTrendChart').getContext('2d');
@@ -998,12 +828,13 @@
                     datasets: [{
                         label: 'Monthly Entries',
                         data: monthlyTotals,
-                        backgroundColor: palette.blue,
+                        backgroundColor: palette.blue, // Uses '#3b82c4'
                         borderRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: false
@@ -1023,19 +854,10 @@
                             ticks: {
                                 color: palette.mutedGray
                             }
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
                         }
                     }
                 }
             });
-<<<<<<< HEAD
-
-            const highCount = clusterData.filter(x => x.cluster_label === "High Need").length;
-            document.getElementById('insightsText').innerHTML =
-                `<strong>Intelligence Report:</strong> AI detected <strong>${highCount}</strong> High-Need segments requiring immediate priority in resource planning.`;
-        }
-=======
         })();
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
     </script>
 @endsection

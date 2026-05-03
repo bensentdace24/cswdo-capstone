@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('acknowledgement_receipts', function (Blueprint $table) {
-            $table->foreignId('barangay_id')->nullable()->constrained('barangays');
-        });
+        if (Schema::hasTable('acknowledgement_receipts')) {
+            if (!Schema::hasColumn('acknowledgement_receipts', 'barangay_id')) {
+                Schema::table('acknowledgement_receipts', function (Blueprint $table) {
+                    $table->unsignedBigInteger('barangay_id')->nullable();
+                });
+            }
+        }
     }
 
     /**
@@ -21,8 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('acknowledgement_receipts', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasTable('acknowledgement_receipts')) {
+            if (Schema::hasColumn('acknowledgement_receipts', 'barangay_id')) {
+                Schema::table('acknowledgement_receipts', function (Blueprint $table) {
+                    $table->dropColumn('barangay_id');
+                });
+            }
+        }
     }
 };

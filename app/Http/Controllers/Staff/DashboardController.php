@@ -1,9 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
 namespace App\Http\Controllers\Staff;
 
 use Illuminate\Http\Request;
@@ -13,37 +9,39 @@ use App\Models\Client;
 use App\Models\ClientAssistanceLog;
 use App\Models\AcknowledgementReceipt;
 use Illuminate\Support\Facades\DB;
-<<<<<<< HEAD
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-
-class DashboardController extends Controller
-=======
 
 class DashboardController extends \App\Http\Controllers\Controller
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
 {
     public function dashboard()
     {
         $data['header_title'] = 'Dashboard';
 
         if (Auth::user()->user_type == 2) {
-<<<<<<< HEAD
-            $clientCount     = Client::count();
-            $medicalCount    = ClientAssistanceLog::where('type', 'Medical')->count();
-            $pharmacyCount   = ClientAssistanceLog::where('type', 'Pharmacy')->count();
-            $totalAmount     = AcknowledgementReceipt::sum('amount');
-
-=======
 
             // ✅ Counts from your real data
-            $clientCount     = \App\Models\Client::count();
-            $medicalCount    = \App\Models\ClientAssistanceLog::where('type', 'Medical')->count();
-            $pharmacyCount   = \App\Models\ClientAssistanceLog::where('type', 'Pharmacy')->count();
-            $totalAmount     = \App\Models\AcknowledgementReceipt::sum('amount');
+            $month = request('month');
+
+            $clientCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->distinct('client_id')->count('client_id');
+            $medicalCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->where('type', 'Medical')->count();
+
+            $pharmacyCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->where('type', 'Pharmacy')->count();
+
+            $totalAmount = AcknowledgementReceipt::when($month, function ($q) use ($month) {
+                $q->whereMonth('created_at', date('m', strtotime($month)))
+                    ->whereYear('created_at', date('Y', strtotime($month)));
+            })->sum('amount');
+
 
             // ✅ Pass data to the dashboard view
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
             return view('staff.dashboard', compact(
                 'clientCount',
                 'medicalCount',
@@ -51,66 +49,54 @@ class DashboardController extends \App\Http\Controllers\Controller
                 'totalAmount'
             ));
         }
-<<<<<<< HEAD
     }
-    // ... rest of your code
 
 
-    // ADD THIS NEW FUNCTION BELOW
-    public function getStaffCashPattern($range = '12')
+    public function cashPattern($range)
     {
         try {
-            $monthsToSubtract = ($range === 'all') ? 60 : 12; // 5 years or 1 year
-            $startDate = Carbon::now()->subMonths($monthsToSubtract)->startOfMonth();
+            // ✅ SAME SOURCE AS ADMIN: acknowledgement_receipts
+            $query = AcknowledgementReceipt::query();
 
+            // 🗓 Filter range (same as admin)
+            if ($range !== 'all') {
+                $months = (int) $range; // e.g. 12
+                $query->where('created_at', '>=', now()->subMonths($months)->startOfMonth());
+            }
+
+            // 📊 Aggregate per month (SAME AS ADMIN)
+            $rows = $query->select(
+                DB::raw("DATE_FORMAT(created_at, '%b %Y') as label"),
+                DB::raw("SUM(CASE WHEN type = 'Medical' THEN 1 ELSE 0 END) as medical_count"),
+                DB::raw("SUM(CASE WHEN type = 'Pharmacy' THEN 1 ELSE 0 END) as pharmacy_count"),
+                DB::raw("SUM(amount) as total_amount"),
+                DB::raw("MIN(created_at) as min_created")
+            )
+                ->groupBy('label')
+                ->orderBy('min_created')
+                ->get();
+
+            // Build arrays for Chart.js
             $labels = [];
-            $medicalData = [];
-            $pharmacyData = [];
-            $amountData = [];
+            $medical = [];
+            $pharmacy = [];
+            $totalAmount = [];
 
-            for ($i = 0; $i <= $monthsToSubtract; $i++) {
-                $currentMonth = $startDate->copy()->addMonths($i);
-                $monthLabel = $currentMonth->format('M Y');
-                $labels[] = $monthLabel;
-
-                // Count Medical logs for this month
-                $medicalData[] = ClientAssistanceLog::where('type', 'Medical')
-                    ->whereMonth('created_at', $currentMonth->month)
-                    ->whereYear('created_at', $currentMonth->year)
-                    ->count();
-
-                // Count Pharmacy logs for this month
-                $pharmacyData[] = ClientAssistanceLog::where('type', 'Pharmacy')
-                    ->whereMonth('created_at', $currentMonth->month)
-                    ->whereYear('created_at', $currentMonth->year)
-                    ->count();
-
-                // Sum total amount for this month
-                $amountData[] = AcknowledgementReceipt::whereMonth('created_at', $currentMonth->month)
-                    ->whereYear('created_at', $currentMonth->year)
-                    ->sum('amount');
+            foreach ($rows as $row) {
+                $labels[] = $row->label;
+                $medical[] = (int) $row->medical_count;
+                $pharmacy[] = (int) $row->pharmacy_count;
+                $totalAmount[] = (float) $row->total_amount;
             }
 
             return response()->json([
                 'labels' => $labels,
-                'medical' => $medicalData,
-                'pharmacy' => $pharmacyData,
-                'totalAmount' => $amountData
+                'medical' => $medical,
+                'pharmacy' => $pharmacy,
+                'totalAmount' => $totalAmount,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
-=======
-
-        // 🟨 STUDENT SIDE
-        else if (Auth::user()->user_type == 3) {
-            // keep as is if not used
-            return view('student.dashboard', $data);
-        }
-
-        // 🟧 PARENT SIDE
-        else if (Auth::user()->user_type == 4) {
-            return view('parent.dashboard', $data);
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
         }
     }
 }

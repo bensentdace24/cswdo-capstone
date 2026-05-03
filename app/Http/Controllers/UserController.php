@@ -196,25 +196,27 @@ class UserController extends Controller
         $data['header_title'] = "Change Password";
         return view('profile.change_password', $data);
     }
+	
+	public function update_change_password(Request $request)
+{
+    $request->validate([
+        'old_password' => 'required',
+        'new_password' => 'required|min:8|confirmed',
+    ], [
+        'new_password.confirmed' => 'The password confirmation does not match.',
+    ]);
 
-    public function update_change_password(Request $request)
-    {
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|min:8|confirmed', // checks new_password_confirmation
-        ], [
-            'new_password.confirmed' => 'The password confirmation does not match.',
-        ]);
+    $user = User::getSingle(Auth::user()->id);
 
-        $user = User::getSingle(Auth::user()->id);
-
-        if (!Hash::check($request->old_password, $user->password)) {
-            return redirect()->back()->with('error', 'Old Password is not correct');
-        }
-
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-
-        return redirect()->back()->with('success', 'Password successfully updated');
+    if (!Hash::check($request->old_password, $user->password)) {
+        return redirect(url('admin/change_password'))
+            ->with('error', 'Old Password is not correct');
     }
+
+    $user->password = Hash::make($request->new_password);
+    $user->save();
+
+    return redirect(url('admin/change_password'))
+        ->with('success', 'Password successfully updated');
+}
 }

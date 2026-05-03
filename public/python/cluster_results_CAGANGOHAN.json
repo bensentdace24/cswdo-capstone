@@ -1,0 +1,18 @@
+[
+    {
+        "transaction_id": 4,
+        "amount": 700.0,
+        "cluster_label": "Low Need",
+        "cluster": "Low Need",
+        "date": "2026-03-06",
+        "client": "Client 4"
+    },
+    {
+        "transaction_id": 39,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-25",
+        "client": "Client 39"
+    }
+]

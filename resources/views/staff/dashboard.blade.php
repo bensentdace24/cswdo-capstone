@@ -1,493 +1,257 @@
 @extends('layouts.app')
 
 @section('content')
-<<<<<<< HEAD
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;600;700&display=swap"
         rel="stylesheet">
 
     <style>
-        /* Global & Layout Reset */
+        /* Global Styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
         }
 
         .content-wrapper {
-            background-color: #f8fafc !important;
-            padding: 2rem 1.5rem;
+            background-color: #f0f2f5 !important;
         }
 
-        /* Typography */
-        .dashboard-title {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 2.25rem;
-            color: #0f172a;
-            letter-spacing: -0.025em;
-            margin-bottom: 0.5rem;
-        }
-
-        .dashboard-subtitle {
-            color: #64748b;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        /* Modern Filter Bar */
-        .filter-container {
-            background: #ffffff;
+        /* Lighter background for the canvas */
+        .card {
             border-radius: 12px;
-            padding: 12px 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .filter-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #64748b;
-            margin: 0;
-        }
-
-        .month-input {
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 0.875rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .month-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .btn-apply {
-            background-color: #3b82f6;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            padding: 6px 16px;
             border: none;
-            font-size: 0.875rem;
-            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .btn-apply:hover {
-            background-color: #2563eb;
-            transform: translateY(-1px);
-        }
+        /* Softer, more prominent shadow */
 
-        /* Modern Stat Cards */
-        .stat-card {
-            position: relative;
-            border-radius: 20px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-card .inner h3 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.05em;
-            z-index: 2;
-            position: relative;
-        }
-
-        .stat-card .inner p {
-            font-size: 0.95rem;
-            font-weight: 500;
-            opacity: 0.9;
-            z-index: 2;
-            position: relative;
-            margin: 5px 0 0;
-        }
-
-        .stat-card .icon-bg {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 5rem;
-            opacity: 0.15;
-            transform: rotate(-15deg);
-            z-index: 1;
-        }
-
-        .stat-footer {
-            margin-top: 1.5rem;
-            font-size: 0.8rem;
+        /* Dashboard Header */
+        .content-header h1 {
+            font-family: 'Poppins', sans-serif;
+            /* Use Poppins for main heading */
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.8;
+            color: #1a1a1a;
+            /* Darker text */
+            font-size: 2rem;
+            padding-top: 10px;
         }
 
-        /* Gradient Palettes */
-        .grad-medical {
-            background: linear-gradient(135deg, #c54e41 0%, #e57373 100%);
-            color: white;
-        }
-
-        .grad-pharmacy {
-            background: linear-gradient(135deg, #4292c6 0%, #64b5f6 100%);
-            color: white;
-        }
-
-        .grad-clients {
-            background: linear-gradient(135deg, #c2a016 0%, #fbc02d 100%);
-            color: white;
-        }
-
-        /* Overview Box */
-        .overview-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 2rem;
-        }
-
-        .overview-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: #eff6ff;
-            color: #3b82f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        /* Chart Section */
-        .main-chart-card {
-            background: white;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-
-        .chart-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chart-header h5 {
-            font-weight: 700;
-            color: #1e293b;
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        #rangeSelector {
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            padding: 5px 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #475569;
-=======
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .content-wrapper {
-            background-color: #f5f6fa !important;
-        }
-
+        /* Summary Boxes (Small-Box) Redesign */
         .small-box {
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            /* Deeper shadow */
             color: #fff;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+            padding: 20px;
         }
 
         .small-box:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            /* More noticeable hover effect */
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .bg-medical {
-            background-color: #c54e41ff !important;
+        /* --- IMPROVED TEXT VISIBILITY START --- */
+        .small-box .inner h3,
+        .small-box .inner p {
+            /* Apply a subtle dark text shadow for better contrast against light gradients */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
         }
 
-        .bg-pharmacy {
-            background-color: #4292c6ff !important;
+        .small-box .inner h3 {
+            font-size: 2.5rem;
+            /* Larger number */
+            font-weight: 700;
+            margin-bottom: 5px;
         }
 
-        .bg-upcoming {
-            background-color: #c2a016ff !important;
+        .small-box .inner p {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.95;
+            /* Slightly increased opacity */
         }
 
-        .card {
+        /* --- IMPROVED TEXT VISIBILITY END --- */
+
+        .small-box .icon i {
+            font-size: 60px;
+            /* Smaller icon */
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            /* Subtle icon */
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .small-box:hover .icon i {
+            opacity: 0.7;
+        }
+
+        .small-box-footer {
+            background: rgba(0, 0, 0, 0.2);
+            /* Slightly darker footer background for text visibility */
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Gradient Colors (Mimicking the image, slightly richer gradients for better base visibility) */
+        .bg-medical-grad {
+            /* Orange/Pink Gradient - Slightly deeper colors */
+            background-image: linear-gradient(to top right, #ff7e77 0%, #ffc0b4 100%);
+        }
+
+        .bg-pharmacy-grad {
+            /* Blue/Purple Gradient - Slightly deeper colors */
+            background-image: linear-gradient(120deg, #64b5f6 0%, #42a5f5 100%);
+        }
+
+        .bg-beneficiary-grad {
+            /* Green/Mint Gradient - Slightly deeper colors */
+            background-image: linear-gradient(120deg, #a5d6a7 0%, #81c784 100%);
+        }
+
+        /* System Summary Card */
+        .card-summary {
+            background-color: #ffffff;
+            border-left: 5px solid #34495e;
+            /* Used the primary purple accent color */
+        }
+
+        /* Chart Card */
+        .chart-card {
+            margin-top: 30px;
+        }
+
+        .chart-header-purple {
+            background-color: #34495e !important;
+            /* A deep purple for the header */
+            color: #fff;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 1rem 1.5rem;
+        }
+
+        .chart-overview-box {
+            background-color: #f8f9fa;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+            margin-top: 15px;
+            /* Add some space */
         }
 
-        .chart-header-primary {
-            background-color: #1D4FA1;
+        /* Modern Filter Styles */
+        .filter-container {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 0;
+        }
+
+        .custom-month-input {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .custom-month-input:focus {
+            border-color: #64b5f6;
+            box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
+        }
+
+        .btn-filter-apply {
+            background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(66, 165, 245, 0.2);
+        }
+
+        .btn-filter-apply:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(66, 165, 245, 0.3);
             color: #fff;
         }
 
-        .chart-header-success {
-            background-color: #27ae60;
-            color: #fff;
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+        .btn-filter-reset {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            color: #718096;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-filter-reset:hover {
+            background: #edf2f7;
+            color: #2d3748;
+            text-decoration: none;
         }
     </style>
 
     <div class="content-wrapper">
-<<<<<<< HEAD
-        <div class="container-fluid">
-
-            <h1 class="dashboard-title">Staff Dashboard</h1>
-            <p class="dashboard-subtitle">Quick summary of system activity and processing</p>
-
-            {{-- Integrated Filter --}}
-            <form method="GET" class="filter-container">
-                <label class="filter-label">Filter by Month</label>
-                <input type="month" name="month" value="{{ request('month') }}" class="month-input">
-                <button type="submit" class="btn-apply shadow-sm">Apply Filter</button>
-                <a href="{{ url()->current() }}" class="btn-reset ms-2"
-                    style="text-decoration:none; font-size: 0.875rem; color: #64748b;">Reset</a>
-            </form>
-
-            <div class="row">
-                {{-- Medical Card --}}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <a href="{{ url('staff/reports') }}" class="text-decoration-none">
-                        <div class="stat-card grad-medical shadow-sm">
-                            <div class="inner">
-                                <h3>{{ $medicalCount }}</h3>
-                                <p>Medical Assistance Records</p>
-                            </div>
-                            <div class="icon-bg"><i class="fas fa-notes-medical"></i></div>
-                            <div class="stat-footer">
-                                <span>View Details</span> <i class="fas fa-chevron-right"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                {{-- Pharmacy Card --}}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <a href="{{ url('staff/reports') }}" class="text-decoration-none">
-                        <div class="stat-card grad-pharmacy shadow-sm">
-                            <div class="inner">
-                                <h3>{{ $pharmacyCount }}</h3>
-                                <p>Pharmacy Assistance Records</p>
-                            </div>
-                            <div class="icon-bg"><i class="fas fa-prescription-bottle-alt"></i></div>
-                            <div class="stat-footer">
-                                <span>View Details</span> <i class="fas fa-chevron-right"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                {{-- Clients Card --}}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <a href="{{ url('staff/client_verification/list') }}" class="text-decoration-none">
-                        <div class="stat-card grad-clients shadow-sm">
-                            <div class="inner">
-                                <h3>{{ $clientCount }}</h3>
-                                <p>Registered Beneficiaries</p>
-                            </div>
-                            <div class="icon-bg"><i class="fas fa-users"></i></div>
-                            <div class="stat-footer">
-                                <span>Manage Directory</span> <i class="fas fa-chevron-right"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Summary Overview Box --}}
-            <div class="overview-card shadow-sm">
-                <div class="overview-icon shadow-sm">
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                <div class="overview-text">
-                    <p class="mb-0 text-muted" style="font-size: 0.9rem; font-weight: 500;">Operational Summary</p>
-                    <h5 class="mb-0" style="font-weight: 700; color: #1e293b;">
-                        Processed <span class="text-primary">{{ $medicalCount + $pharmacyCount }}</span> total cases
-                        with <span class="text-primary">₱{{ number_format($totalAmount, 2) }}</span> disbursed to date.
-                    </h5>
-                </div>
-            </div>
-
-            {{-- Analytics Chart Section --}}
-            <div class="main-chart-card">
-                <div class="chart-header">
-                    <h5><i class="fas fa-chart-line text-primary me-2"></i> Activity Trends</h5>
-                    <select id="rangeSelector" class="form-select-sm">
-                        <option value="12">Last 12 Months</option>
-                        <option value="all">Historical Data</option>
-                    </select>
-                </div>
-
-                <div class="card-body" style="height: 400px; padding: 20px;">
-                    <canvas id="staffActivityChart"></canvas>
-                </div>
-
-                <div class="p-3 bg-light border-top text-center">
-                    <p class="chart-summary-text text-muted mb-0 font-italic" style="font-size: 0.85rem;">
-                        Tracking service velocity and financial patterns.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('staffActivityChart').getContext('2d');
-            const summaryText = document.querySelector('.chart-summary-text');
-            let activityChart = null;
-
-            function loadChartData(range = '12') {
-                // Ensure this matches the route in your web.php exactly
-                fetch("{{ url('staff/dashboard/cash-pattern') }}/" + range)
-                    .then(res => {
-                        if (!res.ok) {
-                            // This will tell us exactly what the error is in the console
-                            console.error('Server Response Error:', res.status);
-                            throw new Error("Server error: " + res.status);
-                        }
-                        return res.json();
-                    })
-                    .then(data => {
-                        // Destroy existing chart if it exists to prevent overlapping
-                        if (activityChart) {
-                            activityChart.destroy();
-                        }
-
-                        activityChart = new Chart(ctx, { // Assigning to the variable here
-                            type: 'bar', // Base type
-                            data: {
-                                labels: data.labels,
-                                datasets: [{
-                                        label: 'Medical Cases',
-                                        data: data.medical,
-                                        backgroundColor: '#c54e41',
-                                        borderRadius: 6,
-                                        yAxisID: 'y1'
-                                    },
-                                    {
-                                        label: 'Pharmacy Cases',
-                                        data: data.pharmacy,
-                                        backgroundColor: '#4292c6',
-                                        borderRadius: 6,
-                                        yAxisID: 'y1'
-                                    },
-                                    {
-                                        label: 'Disbursement (₱)',
-                                        data: data.totalAmount, // Match the controller key
-                                        type: 'line',
-                                        borderColor: '#10b981',
-                                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                        borderWidth: 3,
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointRadius: 4,
-                                        yAxisID: 'y2'
-                                    }
-                                ]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y1: {
-                                        beginAtZero: true,
-                                        position: 'left',
-                                        title: {
-                                            display: true,
-                                            text: 'Case Count'
-                                        }
-                                    },
-                                    y2: {
-                                        beginAtZero: true,
-                                        position: 'right',
-                                        grid: {
-                                            drawOnChartArea: false
-                                        },
-                                        title: {
-                                            display: true,
-                                            text: 'Amount (₱)'
-                                        }
-                                    }
-                                }
-                            }
-                        });
-
-                        summaryText.innerText = range === '12' ?
-                            "Analyzing workload and distribution over the last 12-month cycle." :
-                            "Visualizing comprehensive historical operational data.";
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        summaryText.innerText = "Failed to load analytics data.";
-                    });
-            }
-
-            loadChartData('12');
-
-            document.getElementById('rangeSelector').addEventListener('change', function() {
-                loadChartData(this.value);
-            });
-        });
-    </script>
-=======
         <div class="content-header">
             <div class="container-fluid">
-                <h1 class="m-0 text-dark">Staff Dashboard</h1>
-                <p class="text-muted">Quick summary of system activity</p>
+                <h1 class="m-0"> Staff Dashboard</h1>
             </div>
         </div>
+
+        <form method="GET" class="filter-container">
+            <label class="filter-label">
+                <i class="fas fa-calendar-alt me-1" style="color: #64b5f6;"></i> Filter by Month:
+            </label>
+
+            <input type="month" name="month" value="{{ request('month') }}" class="custom-month-input">
+
+            <button type="submit" class="btn-filter-apply">
+                <i class="fas fa-filter me-1"></i> Apply
+            </button>
+
+            <a href="{{ url()->current() }}" class="btn-filter-reset">
+                <i class="fas fa-undo me-1"></i> Reset
+            </a>
+        </form>
+
 
         <section class="content">
             <div class="container-fluid">
 
-                <!-- Summary Boxes -->
                 <div class="row">
-                    <!-- Medical -->
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="{{ url('staff/reports') }}" class="text-decoration-none">
-                            <div class="small-box bg-medical">
-                                <div class="inner p-4">
+                            <div class="small-box bg-medical-grad">
+                                <div class="inner p-3">
                                     <h3>{{ $medicalCount }}</h3>
                                     <p>Medical Assistance Records</p>
                                 </div>
@@ -499,11 +263,10 @@
                         </a>
                     </div>
 
-                    <!-- Pharmacy -->
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="{{ url('staff/reports') }}" class="text-decoration-none">
-                            <div class="small-box bg-pharmacy">
-                                <div class="inner p-4">
+                            <div class="small-box bg-pharmacy-grad">
+                                <div class="inner p-3">
                                     <h3>{{ $pharmacyCount }}</h3>
                                     <p>Pharmacy Assistance Records</p>
                                 </div>
@@ -515,11 +278,10 @@
                         </a>
                     </div>
 
-                    <!-- Total Beneficiaries -->
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="{{ url('staff/client_verification/list') }}" class="text-decoration-none">
-                            <div class="small-box bg-upcoming">
-                                <div class="inner p-4">
+                            <div class="small-box bg-beneficiary-grad">
+                                <div class="inner p-3">
                                     <h3>{{ $clientCount }}</h3>
                                     <p>Total Registered Beneficiaries</p>
                                 </div>
@@ -528,22 +290,154 @@
                                 </div>
                                 <span class="small-box-footer">View details <i class="fas fa-arrow-circle-right"></i></span>
                             </div>
+                        </a>
                     </div>
                 </div>
 
-                <!-- Quick Summary Card -->
-                <div class="card mt-3 p-3">
-                    <h5 class="mb-2 text-primary"><i class="fas fa-chart-line"></i> System Summary</h5>
-                    <p class="mb-1">
-                        A total of <strong>{{ $clientCount }}</strong> beneficiaries were recorded.
-                        The system has processed <strong>{{ $medicalCount }}</strong> medical and
-                        <strong>{{ $pharmacyCount }}</strong> pharmacy assistance cases,
-                        totaling <strong>₱{{ number_format($totalAmount, 2) }}</strong> disbursed.
+                <div class="card mt-3 p-4 card-summary">
+
+                    <h5 class="mb-2 text-dark">
+                        <i class="fas fa-info-circle text-primary"
+                            style="font-size: 1.1rem; color: #007bff !important;"></i>
+                        <strong style="margin-left: 5px;">System Overview</strong>
+                    </h5>
+
+                    <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                        A total of
+                        <strong style="color: #007bff;">{{ $clientCount }}</strong> beneficiaries were recorded.
+                        The system has processed
+                        <strong style="color: #007bff;">{{ $medicalCount }}</strong> medical and
+                        <strong style="color: #007bff;">{{ $pharmacyCount }}</strong> pharmacy assistance cases, totaling
+                        <strong style="color: #007bff;">₱{{ number_format($totalAmount, 2) }}</strong> disbursed to date.
                     </p>
+                </div>
+
+                <div class="card chart-card shadow-sm">
+                    <div
+                        class="card-header chart-header-purple text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 flex-grow-1"><i class="fas fa-chart-bar me-2"></i> Pattern of Cash Assistance
+                        </h5>
+                        <div class="ms-auto">
+                            <select id="rangeSelector" class="form-select form-select-sm bg-white text-dark"
+                                style="width: 200px; border-radius: 6px;">
+                                <option value="12">Last 12 Months</option>
+                                <option value="all">All Available Data</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="height: 400px;">
+                        <canvas id="cashPatternChart"></canvas>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 pb-3 px-3">
+                        <div class="chart-overview-box rounded-2 p-3">
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;"></p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </section>
     </div>
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('cashPatternChart');
+            const summary = document.querySelector('.chart-overview-box p');
+            let cashChart;
+
+            function loadCashPattern(range = '12') {
+                fetch(`/staff/dashboard/cash-pattern/${range}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data || data.error) return;
+
+                        const labels = data.labels || [];
+                        const medical = data.medical.map(Number);
+                        const pharmacy = data.pharmacy.map(Number);
+                        const totalAmount = data.totalAmount.map(Number);
+
+                        if (cashChart) cashChart.destroy();
+
+                        cashChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels,
+                                datasets: [{
+                                        label: 'Medical Cases',
+                                        data: medical,
+                                        // Updated color to better match the new gradient box
+                                        backgroundColor: '#ff7e77',
+                                    },
+                                    {
+                                        label: 'Pharmacy Cases',
+                                        data: pharmacy,
+                                        // Updated color to better match the new gradient box
+                                        backgroundColor: '#64b5f6',
+                                    },
+                                    {
+                                        label: 'Total Amount (₱)',
+                                        data: totalAmount,
+                                        type: 'line',
+                                        // Retained a vibrant green for the line
+                                        borderColor: '#2ecc71',
+                                        backgroundColor: 'rgba(46,204,113,0.1)',
+                                        borderWidth: 2,
+                                        tension: 0.4,
+                                        fill: true,
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                        align: 'end'
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        min: 0,
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
+
+                        summary.innerHTML =
+                            range === '12' ?
+                            `The chart above shows the trend of **Medical** and **Pharmacy** assistance over the **last 12 months**.` :
+                            `The chart above displays **all available historical data** for **Medical** and **Pharmacy** assistance.`;
+                    });
+            }
+
+            loadCashPattern('12');
+
+            document.getElementById('rangeSelector').addEventListener('change', function() {
+                loadCashPattern(this.value);
+            });
+        });
+    </script>
 @endsection

@@ -16,8 +16,7 @@ class StaffMiddleware
         }
 
         // ✅ If logged in but not staff
-        if (Auth::user()->user_type != 2) {
-            Auth::logout();
+        if ((int) Auth::user()->user_type != 2) {
             return redirect()->route('login')->with('error', 'Access denied. Staff only.');
         }
 

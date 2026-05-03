@@ -31,11 +31,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\ClientRequirementController;
 use Carbon\Carbon;
-<<<<<<< HEAD
-use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
-=======
 
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,7 +75,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('/admin/admin/edit/{id}', [AdminController::class, 'edit']);
     Route::post('/admin/admin/edit/{id}', [AdminController::class, 'update']);
     Route::get('/admin/admin/delete/{id}', [AdminController::class, 'delete']);
-
+    Route::get('/admin/clustering/run', [ReportsController::class, 'runClustering'])
+        ->name('admin.clustering.run');
     // staff url
 
     Route::get('/admin/staff/list', [StaffController::class, 'list']);
@@ -127,7 +128,8 @@ Route::group(['middleware' => 'admin'], function () {
     // ar url
 
     Route::get('/admin/ar/list', [ArController::class, 'list']);
-
+    
+    Route::get('admin/ar/create', [ArController::class, 'create']);
     Route::get('admin/ar/viewing-list', [ArController::class, 'viewingList'])->middleware('admin');
     Route::get('admin/ar/view/{id}', [ArController::class, 'view'])->middleware('admin');
     Route::get('admin/ar/edit/{id}', [ArController::class, 'edit'])->middleware('admin');
@@ -303,16 +305,16 @@ Route::group(['middleware' => 'admin'], function () {
 
 // STAFF CLIENT ROUTES
 
-<<<<<<< HEAD
+
 Route::middleware(['staff'])->group(function () {
     Route::get('/staff/dashboard', [StaffDashboardController::class, 'dashboard'])->name('staff.dashboard');
-    Route::get('/staff/dashboard/cash-pattern/{range}', [StaffDashboardController::class, 'getStaffCashPattern']);
-=======
+    Route::get('/staff/dashboard/cash-pattern/{range}', [\App\Http\Controllers\Staff\DashboardController::class, 'cashPattern']);
+
 Route::group(['middleware' => 'staff'], function () {
 
     Route::get('/staff/dashboard', [DashboardController::class, 'dashboard']);
 
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+
     Route::get('/staff/client/list', [App\Http\Controllers\Staff\ClientController::class, 'list']);
     Route::get('/staff/client/add', [App\Http\Controllers\Staff\ClientController::class, 'add']);
     Route::post('/staff/client/add', [App\Http\Controllers\Staff\ClientController::class, 'insert']);
@@ -339,12 +341,13 @@ Route::group(['middleware' => 'staff'], function () {
     Route::post('/staff/client_verification/edit/{id}', [App\Http\Controllers\Staff\ClientVerificationController::class, 'update']);
     Route::get('/staff/client_verification/delete/{id}', [App\Http\Controllers\Staff\ClientVerificationController::class, 'delete']);
 
-    Route::get('/staff/client_assistance_logs/add/{client_id}', [App\Http\Controllers\Staff\ClientAssistanceLogsController::class, 'add']);
-    Route::post('/staff/client_assistance_logs/add/{client_id}', [App\Http\Controllers\Staff\ClientAssistanceLogsController::class, 'insert']);
+    Route::get('/staff/client_assistance_logs/add/{client_id}', [\App\Http\Controllers\Staff\ClientAssistanceLogsController::class, 'add']);
+Route::post('/staff/client_assistance_logs/add/{client_id}', [\App\Http\Controllers\Staff\ClientAssistanceLogsController::class, 'insert']);
+
 
     Route::get('/staff/ar/list', [App\Http\Controllers\Staff\ARController::class, 'list']);
 
-<<<<<<< HEAD
+
     // AR ROUTES - Cleaning up the double declaration
     Route::prefix('staff')->group(function () {
         // Use the name you defined in the import or the full path
@@ -368,6 +371,8 @@ Route::group(['middleware' => 'staff'], function () {
 
     Route::get('staff/dashboard', [StaffDashboardController::class, 'dashboard'])
         ->name('staff.dashboard');
+    Route::get('/staff/dashboard/cash-pattern/{range}', [\App\Http\Controllers\Staff\DashboardController::class, 'cashPattern'])
+        ->name('staff.dashboard.cashPattern');
 });
 
 // staff account and information
@@ -393,7 +398,7 @@ Route::get('/staff/change_password', [UserController::class, 'change_password'])
 Route::post('/staff/change_password', [UserController::class, 'update_change_password']);
 
 
-=======
+
     Route::prefix('staff')->middleware(['staff'])->group(function () {
         Route::get('ar/list', [StaffARController::class, 'list']);
         Route::get('ar/add', [StaffARController::class, 'create']);
@@ -438,11 +443,9 @@ Route::post('/staff/change_password', [UserController::class, 'update_change_pas
 
     //change_password url
 
-    Route::get('/staff/change_password', [UserController::class, 'change_password']);
-    Route::post('/staff/change_password', [UserController::class, 'update_change_password']);
 });
 
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+
 
 Route::group(['middleware' => 'student'], function () {
 
@@ -488,3 +491,6 @@ Route::group(['middleware' => 'parent'], function () {
     Route::get('/parent/change_password', [UserController::class, 'change_password']);
     Route::post('/parent/change_password', [UserController::class, 'update_change_password']);
 });
+
+
+

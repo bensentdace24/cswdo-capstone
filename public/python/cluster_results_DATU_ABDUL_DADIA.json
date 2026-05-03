@@ -1,0 +1,10 @@
+[
+    {
+        "transaction_id": 18,
+        "amount": 1000.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-06",
+        "client": "Client 18"
+    }
+]

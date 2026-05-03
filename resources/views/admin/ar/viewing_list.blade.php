@@ -14,24 +14,8 @@
                 @include('_message')
                 <div class="card p-4">
 
-                    {{-- ✅ Step 2B: Filter Form -- shabu shabu}}
-<form method="GET" action="{{ url('admin/ar/viewing-list') }}" class="mb-3">
-    <div class="row">
-        <div class="col-md-3">
-            <input type="text" name="search_name" value="{{ request('search_name') }}"
-                class="form-control" placeholder="Search by client name">
-        </div>
 
-        <div class="col-md-2">
-            <select name="type" class="form-control">
-                <option value="">-- Type --</option>
-                <option value="Financial" {{ request('type') == 'Financial' ? 'selected' : '' }}>Financial</option>
-                <option value="Medical" {{ request('type') == 'Medical' ? 'selected' : '' }}>Medical</option>
-                <option value="Pharmacy" {{ request('type') == 'Pharmacy' ? 'selected' : '' }}>Pharmacy</option>
-            </select>
-        </div>
-
-        {{-- ✅ Month Filter --}}
+                    {{-- ✅ Month Filter --}}
                     <form method="GET" action="{{ url('admin/ar/viewing-list') }}" class="mb-3">
                         <div class="row">
                             <div class="col-md-3">
@@ -42,11 +26,11 @@
                             <div class="col-md-2">
                                 <select name="type" class="form-control">
                                     <option value="">-- Type --</option>
-                                    {{-- - <option value="Financial" {{ request('type') == 'Financial' ? 'selected' : '' }}>
-                                        Financial</option> --}}
                                     <option value="Medical" {{ request('type') == 'Medical' ? 'selected' : '' }}>Medical
                                     </option>
                                     <option value="Pharmacy" {{ request('type') == 'Pharmacy' ? 'selected' : '' }}>Pharmacy
+                                    </option>
+                                    <option value="Burial" {{ request('type') == 'Burial' ? 'selected' : '' }}>Burial
                                     </option>
                                 </select>
                             </div>
@@ -103,9 +87,14 @@
                             @foreach ($getRecord as $key => $value)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $value->recipient_name ?? 'N/A' }}</td>
+                                    <td>
+                                        {{ $value->clientVerification->client->full_name ?? ($value->recipient_name ?? 'N/A') }}
+                                    </td>
                                     <td>₱{{ number_format($value->amount, 2) }}</td>
-                                    <td>{{ $value->type }}</td>
+                                    <td>
+                                        {{ $value->type ?? 'N/A' }}
+                                    </td>
+
                                     <td>
                                         {{ ucwords(strtolower($value->day_received)) }}
                                         {{ ucwords(strtolower($value->month_received)) }} {{ $value->year_received }}
@@ -115,7 +104,7 @@
                                             data-toggle="tooltip" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ url('admin/ar/edit/' . $value->id) }}"
+                                        <a href="{{ url('admin/ar/edit/' . $value->id . '?finance_officer_name=' . urlencode(request('finance_officer_name'))) }}"
                                             class="btn btn-sm btn-primary ml-2" data-toggle="tooltip" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>

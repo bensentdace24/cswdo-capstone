@@ -10,8 +10,6 @@ use App\Models\AcknowledgementReceipt;
 use Illuminate\Support\Facades\Response;
 
 class ReportsController extends Controller
-<<<<<<< HEAD
-
 {
     public function index()
     {
@@ -19,44 +17,42 @@ class ReportsController extends Controller
         $year = request('year');
         $barangay = request('barangay');
 
-        // ================================
-        // 1) OFFICIAL BARANGAYS (Dropdown Data)
-        // ================================
+        // ✅ OFFICIAL BARANGAYS (CANONICAL LIST)
         $officialBarangays = [
-            'A. O. FLOIRENDO',
+            'A O FLOIRENDO',
             'DATU ABDUL DADIA',
             'BUENAVISTA',
             'CACAO',
             'CAGANGOHAN',
             'CONSOLACION',
             'DAPCO',
-            'GREDU (POBLACION)',
-            'J.P. LAUREL',
+            'GREDU',
+            'JP LAUREL',
             'KASILAK',
             'KATIPUNAN',
             'KATUALAN',
             'KAUSWAGAN',
             'KIOTOY',
             'LITTLE PANAY',
-            'LOWER PANAGA (ROXAS)',
+            'LOWER PANAGA',
             'MABUNAO',
             'MADUAO',
             'MALATIVAS',
             'MANAY',
             'NANYO',
-            'NEW MALAGA (DALISAY)',
+            'NEW MALAGA',
             'NEW MALITBOG',
-            'NEW PANDAN (POBLACION)',
+            'NEW PANDAN',
             'NEW VISAYAS',
             'QUEZON',
             'SALVACION',
-            'SAN FRANCISCO (POBLACION)',
+            'SAN FRANCISCO',
             'SAN NICOLAS',
             'SAN PEDRO',
             'SAN ROQUE',
             'SAN VICENTE',
             'SANTA CRUZ',
-            'SANTO NIÑO (POBLACION)',
+            'SANTO NINO',
             'SINDATON',
             'SOUTHERN DAVAO',
             'TAGPORE',
@@ -65,148 +61,136 @@ class ReportsController extends Controller
             'WATERFALL',
         ];
 
-        $barangayList = collect($officialBarangays)->map(fn($b) => (object)['barangay' => $b]);
-
-        // ================================
-        // 2) ALIASES: map OFFICIAL name -> DB values
-        // ================================
-        $barangayAliases = [
-            'GREDU (POBLACION)' => ['GREDU'],
-            'LOWER PANAGA (ROXAS)' => ['LOWER PANAGA'],
-            'NEW MALAGA (DALISAY)' => ['NEW MALAGA', 'DALISAY'],
-            'NEW PANDAN (POBLACION)' => ['NEW PANDAN'],
-            'SAN FRANCISCO (POBLACION)' => ['SAN FRANCISCO'],
-            'SANTO NIÑO (POBLACION)' => ['SANTO NIÑO', 'STO NIÑO'],
-            'SOUTHERN DAVAO' => ['SOUTHERN DAVAO', 'SO. DAVAO', 'SOUTHER DAVAO', 'SOUTHERN AVAO'],
-            'J.P. LAUREL' => ['J.P. LAUREL', 'JP LAUREL', 'J.P.', 'LAUREL'],
-        ];
-
-        $filterBarangays = $barangay ? ($barangayAliases[$barangay] ?? [$barangay]) : null;
-
-
-        // ================================
-        // 3) CALCULATIONS (Filtered)
-        // ================================
-        $totalAssistanceAmount = AcknowledgementReceipt::when($filterBarangays, fn($q) => $q->whereIn('barangay', $filterBarangays))
+        // ✅ TOTAL AMOUNT
+        $totalAssistanceAmount = $this->applyBarangayFilter(AcknowledgementReceipt::query(), $barangay)
             ->when($month, fn($q) => $q->whereMonth('created_at', $month))
             ->when($year, fn($q) => $q->whereYear('created_at', $year))
             ->sum('amount');
-
-        $totalBeneficiaries = AcknowledgementReceipt::when($filterBarangays, fn($q) => $q->whereIn('barangay', $filterBarangays))
-            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
-            ->when($year, fn($q) => $q->whereYear('created_at', $year))
-            ->distinct('client_verification_id')
-            ->count('client_verification_id');
-
-        $topBarangays = AcknowledgementReceipt::select('barangay', DB::raw('COUNT(*) as total_assistances'), DB::raw('SUM(amount) as total_amount'))
-            ->when($filterBarangays, fn($q) => $q->whereIn('barangay', $filterBarangays))
-            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
-            ->when($year, fn($q) => $q->whereYear('created_at', $year))
-            ->groupBy('barangay')
-            ->orderByDesc('total_assistances')
-            ->limit(5)->get();
-
-        $barangayData = AcknowledgementReceipt::select('barangay', DB::raw('COUNT(*) as total_assistances'), DB::raw('SUM(amount) as total_amount'))
-            ->when($filterBarangays, fn($q) => $q->whereIn('barangay', $filterBarangays))
-            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
-            ->when($year, fn($q) => $q->whereYear('created_at', $year))
-            ->groupBy('barangay')->get();
-
-        $assistanceTypeData = ClientAssistanceLog::select('client_assistance_logs.type', DB::raw('COUNT(*) as total'))
-            ->leftJoin('acknowledgement_receipts', 'client_assistance_logs.client_id', '=', 'acknowledgement_receipts.client_id')
-            ->when($filterBarangays, fn($q) => $q->whereIn('acknowledgement_receipts.barangay', $filterBarangays))
-            ->when($month, fn($q) => $q->whereMonth('client_assistance_logs.created_at', $month))
-            ->when($year, fn($q) => $q->whereYear('client_assistance_logs.created_at', $year))
-            ->groupBy('client_assistance_logs.type')->get();
-
-        $monthlyTrend = ClientAssistanceLog::select(
-            DB::raw("DATE_FORMAT(client_assistance_logs.created_at, '%b %Y') as month"),
-            DB::raw('COUNT(*) as total'),
-            DB::raw('MIN(client_assistance_logs.created_at) as min_created')
-        )
-            ->leftJoin('acknowledgement_receipts', 'client_assistance_logs.client_id', '=', 'acknowledgement_receipts.client_id')
-            ->when($filterBarangays, fn($q) => $q->whereIn('acknowledgement_receipts.barangay', $filterBarangays))
-            ->when($month, fn($q) => $q->whereMonth('client_assistance_logs.created_at', $month))
-            ->when($year, fn($q) => $q->whereYear('client_assistance_logs.created_at', $year))
-            ->groupBy('month')->orderBy('min_created')->get();
-
-        $lastUpdated = DB::table('ai_updates')->value('updated_at');
-        $topBarangayName = $topBarangays->first()->barangay ?? '—';
-        $topBarangayCount = $topBarangays->first()->total_assistances ?? 0;
-
-        return view('staff.reports', compact(
-            'barangayList',
-=======
-{
-    public function index()
-    {
-        $lastUpdated = DB::table('ai_updates')->value('updated_at');
-
-        $totalAssistanceAmount = (float) AcknowledgementReceipt::sum('amount');
-
-        $totalBeneficiaries = AcknowledgementReceipt::distinct('client_verification_id')
-            ->count('client_verification_id');
-
-        $topBarangays = AcknowledgementReceipt::select(
+        // ✅ RAW DATA
+        $rawData = AcknowledgementReceipt::select(
             'barangay',
             DB::raw('COUNT(*) as total_assistances'),
             DB::raw('SUM(amount) as total_amount')
+        )->get();
+
+        // ✅ MERGE DUPLICATES
+        $mergedBarangays = collect();
+
+        foreach ($rawData as $row) {
+            $normalized = $this->normalizeBarangay($row->barangay);
+
+            if (!$mergedBarangays->has($normalized)) {
+                $mergedBarangays[$normalized] = (object)[
+                    'barangay' => $normalized,
+                    'total_assistances' => 0,
+                    'total_amount' => 0,
+                ];
+            }
+
+            $mergedBarangays[$normalized]->total_assistances += $row->total_assistances;
+            $mergedBarangays[$normalized]->total_amount += $row->total_amount;
+        }
+
+        $barangayData = $mergedBarangays->values();
+        $topBarangays = $this->applyBarangayFilter(
+            AcknowledgementReceipt::select(
+                DB::raw("REPLACE(REPLACE(UPPER(barangay), '.', ''), ' ', '') as barangay"),
+                DB::raw('COUNT(*) as total_assistances')
+            ),
+            $barangay
         )
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
             ->groupBy('barangay')
             ->orderByDesc('total_assistances')
             ->limit(5)
             ->get();
 
-        $barangayData = AcknowledgementReceipt::select(
-            'barangay',
-            DB::raw('COUNT(*) as total_assistances'),
-            DB::raw('SUM(amount) as total_amount')
-        )
-            ->groupBy('barangay')
-            ->orderByDesc('total_assistances')
-            ->get();
 
-        $assistanceTypeData = ClientAssistanceLog::select(
-            'type',
-            DB::raw('COUNT(*) as total')
-        )
+        // ✅ TOP 5 BARANGAYS
+
+        $topBarangay = $topBarangays->first();
+        $topBarangayName = $topBarangay->barangay ?? '—';
+        $topBarangayCount = $topBarangay->total_assistances ?? 0;
+
+        // ✅ ASSISTANCE TYPE DATA (REAL)
+        $assistanceTypeData = ClientAssistanceLog::select('type', DB::raw('COUNT(*) as total'))
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
             ->groupBy('type')
-            ->orderByDesc('total')
             ->get();
 
+        // ✅ MONTHLY TREND (REAL)
         $monthlyTrend = ClientAssistanceLog::select(
             DB::raw("DATE_FORMAT(created_at, '%b %Y') as month"),
-            DB::raw('COUNT(*) as total'),
-            DB::raw('MIN(created_at) as min_created')
+            DB::raw("COUNT(*) as total"),
+            DB::raw("MIN(created_at) as min_created")
         )
-            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
             ->groupBy('month')
             ->orderBy('min_created')
             ->get();
 
-        $topBarangayName = $topBarangays->first()->barangay ?? '—';
-        $topBarangayCount = $topBarangays->first()->total_assistances ?? 0;
+        // ✅ TOTAL BENEFICIARIES
+        $totalBeneficiaries = $this->applyBarangayFilter(AcknowledgementReceipt::query(), $barangay)
+            ->when($month, fn($q) => $q->whereMonth('created_at', $month))
+            ->when($year, fn($q) => $q->whereYear('created_at', $year))
+            ->distinct('client_verification_id')
+            ->count('client_verification_id');
 
-        return view('admin.reports', compact(
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+
+        $lastUpdated = DB::table('ai_updates')->value('updated_at');
+
+        $barangayList = collect($officialBarangays)->sort()->values();
+
+        return view('staff.reports', compact(
             'totalAssistanceAmount',
             'totalBeneficiaries',
-            'topBarangays',
             'barangayData',
-            'assistanceTypeData',
-            'monthlyTrend',
+            'topBarangays',          // ✅ IMPORTANT
             'topBarangayName',
             'topBarangayCount',
-            'lastUpdated'
+            'lastUpdated',
+            'barangayList',
+            'assistanceTypeData',
+            'monthlyTrend'
         ));
     }
 
-<<<<<<< HEAD
-    // ... Keep your exportCsv, clusterAnalysis, and exportCluster functions as they were
+    // ✅ HELPER FUNCTION (MUST BE OUTSIDE index())
+    private function normalizeBarangay($name)
+    {
+        $name = strtoupper($name);
 
+        // Remove (POBLACION), (ROXAS), etc
+        $name = preg_replace('/\s*\(.*?\)\s*/', '', $name);
 
-=======
->>>>>>> cb4513ab89b796158e5690293771f2ef3a7e4f17
+        // Replace Ñ with N
+        $name = str_replace('Ñ', 'N', $name);
+
+        // Remove dots
+        $name = str_replace('.', '', $name);
+
+        // Normalize spaces
+        $name = preg_replace('/\s+/', ' ', trim($name));
+
+        return $name;
+    }
+    private function applyBarangayFilter($query, $barangay)
+    {
+        if (!$barangay) {
+            return $query;
+        }
+
+        $clean = str_replace(['.', ' '], '', strtoupper($barangay));
+
+        return $query->whereRaw(
+            "REPLACE(REPLACE(UPPER(barangay), '.', ''), ' ', '') = ?",
+            [$clean]
+        );
+    }
+
     public function exportCsv()
     {
         $date = now()->format('Y-m-d');
