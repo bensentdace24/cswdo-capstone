@@ -25,6 +25,9 @@ class AcknowledgementReceipt extends Model
         'year_received',
         'received_date',
         'photo',
+        'is_imported',
+        'created_at',
+        'updated_at',
     ];
 
     // Relationship to Client (if used)

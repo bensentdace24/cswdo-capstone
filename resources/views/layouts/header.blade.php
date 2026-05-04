@@ -454,6 +454,14 @@
                     <li class="nav-header">ADMINISTRATION</li>
 
                     <li class="nav-item">
+                        <a href="{{ route('admin.import.form') }}"
+                            class="nav-link @if (Request::segment(2) == 'receipts' && Request::segment(3) == 'import') active @endif">
+                            <i class="nav-icon fas fa-file-import"></i>
+                            <p>Import Data</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="{{ url('admin/admin/list') }}"
                             class="nav-link @if (Request::segment(2) == 'admin') active @endif">
                             <i class="nav-icon fas fa-user-tie"></i>

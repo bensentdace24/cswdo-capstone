@@ -390,16 +390,22 @@ class ReportsController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
-public function runClustering()
-{
-    $python = base_path('venv/bin/python');
-    $scriptPath = public_path('python/cluster_transactions_all_barangays.py');
+    public function runClustering()
+    {
+        $pythonPath = config('python.python_path', 'python');
+        
+        $kmeansScript = public_path('python/kmeans_cluster.py');
+        $rfScript = public_path('python/random_forest_classifier.py');
+        $allBrgyScript = public_path('python/cluster_transactions_all_barangays.py');
 
-    $cmd = $python . ' ' . escapeshellarg($scriptPath) . ' 2>&1';
-    $output = shell_exec($cmd);
+        $output1 = shell_exec("\"$pythonPath\" \"$kmeansScript\" 2>&1");
+        $output2 = shell_exec("\"$pythonPath\" \"$rfScript\" 2>&1");
+        $output3 = shell_exec("\"$pythonPath\" \"$allBrgyScript\" 2>&1");
 
-    Log::info("Clustering output: " . $output);
+        Log::info("AI Update Output:\nKMeans: $output1\nRF: $output2\nAllBrgy: $output3");
 
-    return redirect()->back()->with('success', 'Clustering updated successfully!');
-}
+        DB::table('ai_updates')->updateOrInsert(['id' => 1], ['updated_at' => now()]);
+
+        return redirect()->back()->with('success', 'AI Analytics and Clustering updated successfully!');
+    }
 }

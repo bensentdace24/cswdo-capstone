@@ -1,10 +1,26 @@
 [
     {
-        "transaction_id": 41,
-        "amount": 900.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-25",
-        "client": "Client 41"
+        "transaction_id": 2,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-15",
+        "client": "Jane Smith"
+    },
+    {
+        "transaction_id": 10,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-15",
+        "client": "Jovenal Tan"
+    },
+    {
+        "transaction_id": 18,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-15",
+        "client": "Carlos Dela Cruz"
     }
 ]

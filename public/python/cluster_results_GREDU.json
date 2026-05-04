@@ -1,26 +1,26 @@
 [
     {
-        "transaction_id": 2,
+        "transaction_id": 1,
         "amount": 1200.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-06",
-        "client": "Client 2"
+        "date": "2026-05-04",
+        "client": "John Doe"
     },
     {
-        "transaction_id": 29,
-        "amount": 800.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-06",
-        "client": "Client 29"
-    },
-    {
-        "transaction_id": 43,
-        "amount": 1000.0,
+        "transaction_id": 9,
+        "amount": 1200.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-25",
-        "client": "Client 43"
+        "date": "2026-05-04",
+        "client": "Ricardo Cardo"
+    },
+    {
+        "transaction_id": 17,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-05-04",
+        "client": "Paula Ramos"
     }
 ]

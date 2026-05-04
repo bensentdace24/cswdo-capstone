@@ -4,15 +4,15 @@
         "amount": 1100.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-06",
-        "client": "Client 8"
+        "date": "2026-02-06",
+        "client": "Catriona Magnayon"
     },
     {
-        "transaction_id": 55,
-        "amount": 1200.0,
+        "transaction_id": 16,
+        "amount": 1100.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-25",
-        "client": "Client 55"
+        "date": "2026-02-06",
+        "client": "Miguel Torres"
     }
 ]

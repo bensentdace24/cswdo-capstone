@@ -14,12 +14,16 @@ os.makedirs("public/python", exist_ok=True)
 # ======================================
 # Database connection
 # ======================================
-db = mysql.connector.connect(
-    host="127.0.0.1",
-    user="root",
-    password="ivanjay1629",
-    database="cswdo_1"
-)
+try:
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="",
+        database="cswdo_1"
+    )
+except mysql.connector.Error as err:
+    print(f"[ERROR] Database connection failed: {err}")
+    exit()
 
 # ======================================
 # FINAL CLEANING FUNCTION (YOUR ORIGINAL)
@@ -88,7 +92,7 @@ def clean_barangay(b):
 # 3. LOAD RAW RECEIPT DATA (NO JOIN!)
 # ======================================
 query = """
-SELECT 
+SELECT
     barangay,
     amount
 FROM acknowledgement_receipts
@@ -118,7 +122,7 @@ print("List:", sorted(barangay_data["barangay"].unique()))
 # If very few barangays
 # ======================================
 if barangay_data.shape[0] < 3:
-    print("⚠️ Not enough barangays.")
+    print("[WARNING] Not enough barangays.")
     exit()
 
 # ======================================
@@ -150,5 +154,5 @@ output_path = os.path.join(os.path.dirname(__file__), 'cluster_results.json')
 with open(output_path, "w") as f:
     json.dump(barangay_data.to_dict(orient='records'), f, indent=4)
 
-print("\n✅ FINAL CLEAN K-MEANS COMPLETE!")
+print("\n--- FINAL CLEAN K-MEANS COMPLETE ---")
 print("Saved to:", output_path)

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\AcknowledgementReceipt;
 use Illuminate\Support\Facades\DB;
 use App\Models\ClientAssistanceLog;
+use App\Models\Client;
+use Illuminate\Support\Facades\Log;
 
 
 class ImportController extends Controller
@@ -23,71 +25,120 @@ class ImportController extends Controller
 
         $file = $request->file('csv_file');
         $path = $file->getRealPath();
-        $data = array_map('str_getcsv', file($path));
+        
+        // Read the whole file into an array
+        $lines = file($path);
+        if (empty($lines)) {
+            return back()->with('error', 'CSV file is empty.');
+        }
 
-        $headers = array_map('trim', array_shift($data));
+        // Get headers and determine delimiter (comma or tab)
+        $headerLine = array_shift($lines);
+        $delimiter = strpos($headerLine, "\t") !== false ? "\t" : ",";
+        $headers = array_map('trim', str_getcsv($headerLine, $delimiter));
 
         DB::beginTransaction();
         try {
-            foreach ($data as $row) {
+            $importedCount = 0;
+            foreach ($lines as $line) {
+                if (empty(trim($line))) continue;
+                
+                $row = str_getcsv($line, $delimiter);
+                if (count($headers) !== count($row)) continue;
+                
                 $rowData = array_combine($headers, $row);
+                $clientId = trim($rowData['client_id'] ?? '');
 
-                $clientId = $rowData['client_id'] ?? null;
+                // ✅ Skip if client ID is missing or not numeric
+                if (empty($clientId) || !is_numeric($clientId)) {
+                    continue;
+                }
 
-                // ✅ Skip if client does not exist
+                // ✅ Check if client exists in DB
                 if (!DB::table('clients')->where('id', $clientId)->exists()) {
                     continue;
                 }
 
-                // ✅ Insert to acknowledgement_receipts
-                AcknowledgementReceipt::create([
-                    'client_id' => $clientId,
-                    'client_verification_id' => $rowData['client_verification_id'] ?? null,
-                    'recipient_name' => $rowData['recipient_name'] ?? '',
-                    'barangay' => $rowData['barangay'] ?? '',
-                    'amount' => $rowData['amount'] ?? 0,
-                    'amount_words' => $rowData['amount_words'] ?? '',
-                    'type' => $rowData['type'] ?? '',
-                    'day_received' => $rowData['day_received'] ?? '',
-                    'month_received' => $rowData['month_received'] ?? '',
-                    'year_received' => $rowData['year_received'] ?? '',
-                    'photo' => $rowData['photo'] ?? '',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                // 💰 Clean Amount (remove ₱, commas, spaces)
+                $rawAmount = $rowData['amount'] ?? '0';
+                $cleanAmount = (float) preg_replace('/[^\d.]/', '', $rawAmount);
 
-                // ✅ Convert CSV date to actual timestamp for charts
-                $day  = $rowData['day_received'] ?? null;
-                $month = $rowData['month_received'] ?? null;
-                $year = $rowData['year_received'] ?? null;
+                // 📅 Handle Dates
+                $day   = trim($rowData['day_received'] ?? '');
+                $month = trim($rowData['month_received'] ?? '');
+                $year  = trim($rowData['year_received'] ?? '');
 
-                if ($day && $month && $year) {
-                    $monthNumber = date('m', strtotime($month));
-                    $assistedDate = "$year-$monthNumber-$day";
+                if (!empty($day) && !empty($month) && !empty($year)) {
+                    $monthNumber = is_numeric($month) ? $month : date('m', strtotime($month));
+                    $assistedDate = sprintf('%04d-%02d-%02d', $year, $monthNumber, $day);
                 } else {
-                    $assistedDate = now();
+                    $assistedDate = now()->format('Y-m-d');
                 }
 
-                // ✅ Insert to client_assistance_logs using real date
-                DB::table('client_assistance_logs')->insert([
-                    'client_id' => $clientId,
-                    'assisted_at' => $assistedDate,
-                    'type' => $rowData['type'] ?? '',
-                    'created_at' => $assistedDate,
-                    'updated_at' => now(),
+                // 🔍 Ensure client_verification_id exists (find latest if missing)
+                $verificationId = $rowData['client_verification_id'] ?? null;
+                if (!$verificationId || !is_numeric($verificationId)) {
+                    $verificationId = DB::table('client_verifications')
+                        ->where('client_id', $clientId)
+                        ->orderByDesc('id')
+                        ->value('id');
+                    
+                    // 🆕 If still no verification, create a default one automatically
+                    if (!$verificationId) {
+                        $verificationId = DB::table('client_verifications')->insertGetId([
+                            'client_id'         => $clientId,
+                            'problem_presented' => 'Imported via CSV',
+                            'created_at'        => now(),
+                            'updated_at'        => now(),
+                        ]);
+                    }
+                }
+
+                // ✅ Insert to acknowledgement_receipts
+                AcknowledgementReceipt::create([
+                    'client_id'              => $clientId,
+                    'client_verification_id' => $verificationId,
+                    'recipient_name'         => $rowData['recipient_name'] ?? '',
+                    'barangay'               => $rowData['barangay'] ?? '',
+                    'amount'                 => $cleanAmount,
+                    'amount_words'           => $rowData['amount_words'] ?? '',
+                    'type'                   => $rowData['type'] ?? '',
+                    'day_received'           => $day,
+                    'month_received'         => $month,
+                    'year_received'          => $year,
+                    'photo'                  => $rowData['photo'] ?? null,
+                    'created_at'             => $assistedDate . ' ' . now()->format('H:i:s'),
+                    'updated_at'             => now(),
                 ]);
+                // ✅ Insert to client_assistance_logs for Eligibility
+                ClientAssistanceLog::create([
+                    'client_id'   => $clientId,
+                    'assisted_at' => $assistedDate,
+                    'type'        => $rowData['type'] ?? '',
+                    'created_at'  => $assistedDate . ' ' . now()->format('H:i:s'),
+                    'updated_at'  => now(),
+                ]);
+
+                $importedCount++;
             }
 
             DB::commit();
 
-            // ✅ UPDATE AI MODELS IMMEDIATELY
-            shell_exec("python " . public_path('python/kmeans_cluster.py'));
-            shell_exec("python " . public_path('python/random_forest_classifier.py'));
+            // ✅ UPDATE AI MODELS USING CONFIG PATH
+            $pythonPath = config('python.python_path', 'python');
+            $kmeansScript = public_path('python/kmeans_cluster.py');
+            $rfScript = public_path('python/random_forest_classifier.py');
+            $allBrgyScript = public_path('python/cluster_transactions_all_barangays.py');
 
-            // ✅ Save last updated timestamp
-            DB::table('ai_updates')->updateOrInsert([], ['updated_at' => now()]);
+            $out1 = shell_exec("\"$pythonPath\" \"$kmeansScript\" 2>&1");
+            $out2 = shell_exec("\"$pythonPath\" \"$rfScript\" 2>&1");
+            $out3 = shell_exec("\"$pythonPath\" \"$allBrgyScript\" 2>&1");
 
-            return back()->with('success', '✅ CSV imported and analytics updated!');
+            Log::info("AI Import Update:\nKMeans: $out1\nRF: $out2\nAllBrgy: $out3");
+
+            DB::table('ai_updates')->updateOrInsert(['id' => 1], ['updated_at' => now()]);
+
+            return back()->with('success', "✅ Successfully imported $importedCount records and updated analytics!");
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Import failed: ' . $e->getMessage());
@@ -129,7 +180,7 @@ class ImportController extends Controller
                     $sex = $rowData['sex'] ?? null;
 
                     // 🔍 Check for existing client with same name, age, and sex to avoid duplicates
-                    $existing = \App\Models\Client::where('full_name', $fullName)
+                    $existing = Client::where('full_name', $fullName)
                         ->where('age', $age)
                         ->where('sex', $sex)
                         ->first();
@@ -140,7 +191,7 @@ class ImportController extends Controller
                     }
 
                     // 🧾 Create new client
-                    \App\Models\Client::create([
+                    Client::create([
                         'full_name'              => $fullName,
                         'address'                => $rowData['address'] ?? null,
                         'is_ips'                 => isset($rowData['is_ips']) ? (int)$rowData['is_ips'] : 0,

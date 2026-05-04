@@ -15,6 +15,9 @@ class ClientAssistanceLog extends Model
         'assisted_at',
         'type',
         'notes',
+        'is_imported',
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [

@@ -10,14 +10,14 @@ import os
 # =======================================================
 try:
     db = mysql.connector.connect(
-      host="127.0.0.1",
-    user="root",
-    password="NewStrongPass123!",
-    database="cswdo",
-    port=3306
-)
-except:
-    print("❌ Database connection failed")
+        host="127.0.0.1",
+        user="root",
+        password="",
+        database="cswdo_1",
+        port=3306
+    )
+except Exception as e:
+    print(f"[ERROR] Database connection failed: {e}")
     exit()
 
 
@@ -38,7 +38,7 @@ GROUP BY barangay
 data = pd.read_sql(query, db)
 
 if data.empty:
-    print("⚠️ No data found.")
+    print("[WARNING] No data found.")
     exit()
 
 total_rows = data.shape[0]
@@ -163,7 +163,7 @@ print("Saved to:", output_path)
 
 print(data.head())
 print("Rows:", len(data))
-print("\n✅ Random Forest (Percentile + Z-Score Version) Complete!")
+print("\n--- Random Forest (Percentile + Z-Score Version) Complete ---")
 print("\n--- Summary ---")
 print("Urgency counts:", summary)
 print("\nHigh urgency anomalies:", len(high_anomalies))

@@ -12,19 +12,23 @@ SUMMARY_OUTPUT = os.path.join(BASE_DIR, "cluster_results.json")
 # ======================================
 # DATABASE CONNECTION
 # ======================================
-db = mysql.connector.connect(
-    host="127.0.0.1",
-    user="root",
-    password="NewStrongPass123!",
-    database="cswdo"
-)
+try:
+    db = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="",
+        database="cswdo_1"
+    )
+except mysql.connector.Error as err:
+    print(f"[ERROR] Database connection failed: {err}")
+    exit()
 
-print("✅ Connected to database")
+print("[INFO] Connected to database")
 
 # ======================================
 # STEP 1: GET ALL TRANSACTIONS
 # ======================================
-print("\n📊 Fetching ALL transactions...")
+print("\n[INFO] Fetching ALL transactions...")
 
 transaction_query = """
 SELECT
@@ -42,19 +46,19 @@ ORDER BY ar.barangay, ar.created_at
 """
 
 df_transactions = pd.read_sql(transaction_query, db)
-print(f"✅ Found {len(df_transactions)} total transactions")
+print(f"[INFO] Found {len(df_transactions)} total transactions")
 
 if df_transactions.empty:
-    print("❌ No transactions found!")
+    print("[ERROR] No transactions found!")
     exit()
 
 # ======================================
 # STEP 2: ASSIGN TRANSACTION COLORS (PER TRANSACTION)
 # ======================================
-print("\n🔮 Assigning transaction colors based on amount:")
-print("   - Low Need (Green): ₱500 - ₱799")
-print("   - Medium Need (Yellow): ₱800 - ₱999")
-print("   - High Need (Red): ₱1000 - ₱1200")
+print("\n[INFO] Assigning transaction colors based on amount:")
+print("   - Low Need (Green): 500 - 799")
+print("   - Medium Need (Yellow): 800 - 999")
+print("   - High Need (Red): 1000 - 1200")
 
 def get_transaction_color(amount):
     """Color for individual transactions"""
@@ -71,7 +75,7 @@ df_transactions['cluster_label'] = df_transactions['transaction_color']
 # ======================================
 # STEP 3: CREATE SUMMARY DATA FOR FULL DISTRIBUTION
 # ======================================
-print("\n📊 Creating FULL DISTRIBUTION summary (1 dot per barangay)...")
+print("\n[INFO] Creating FULL DISTRIBUTION summary (1 dot per barangay)...")
 
 summary_data = []
 barangay_groups = df_transactions.groupby('barangay')
@@ -100,7 +104,7 @@ for barangay, group in barangay_groups:
     })
 
 df_summary = pd.DataFrame(summary_data)
-print(f"✅ Found {len(df_summary)} barangays")
+print(f"[INFO] Found {len(df_summary)} barangays")
 
 # ======================================
 # STEP 4: SAVE FULL DISTRIBUTION JSON
@@ -110,12 +114,12 @@ result_summary = df_summary[['barangay', 'total_assistances', 'total_amount', 'c
 with open(SUMMARY_OUTPUT, "w", encoding="utf-8") as f:
     json.dump(result_summary.to_dict(orient="records"), f, indent=4)
 
-print(f"✅ Saved FULL DISTRIBUTION to: {SUMMARY_OUTPUT}")
+print(f"[INFO] Saved FULL DISTRIBUTION to: {SUMMARY_OUTPUT}")
 
 # ======================================
 # STEP 5: SAVE PER-BARANGAY TRANSACTION FILES
 # ======================================
-print("\n📁 Saving PER-BARANGAY transaction files...")
+print("\n[INFO] Saving PER-BARANGAY transaction files...")
 
 def normalize_filename(barangay):
     """Match barangay names exactly as they appear in files"""
@@ -164,6 +168,10 @@ def normalize_filename(barangay):
         'SANTA CRUZ': 'SANTA_CRUZ',
         'SANTO NIÑO': 'SANTO_NIÑO',
         'SANTO NINO': 'SANTO_NIÑO',
+        'STO. NIÑO': 'SANTO_NIÑO',
+        'STO NIÑO': 'SANTO_NIÑO',
+        'STO. NINO': 'SANTO_NIÑO',
+        'STO NINO': 'SANTO_NIÑO',
         'SINDATON': 'SINDATON',
         'SOUTHERN DAVAO': 'SOUTHERN_DAVAO',
         'TAGPORE': 'TAGPORE',
@@ -205,8 +213,8 @@ for barangay, group in df_transactions.groupby('barangay'):
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(transaction_data, f, indent=4)
 
-    print(f"✅ Saved {len(transaction_data)} transactions to: cluster_results_{safe_name}.json")
+    print(f"[INFO] Saved {len(transaction_data)} transactions to: cluster_results_{safe_name}.json")
 
-print("\n🎉 DONE! Now you'll see:")
+print("\n--- DONE ---")
 print("   - FULL DISTRIBUTION: 1 dot per barangay, colored by TOTAL amount")
 print("   - PER BARANGAY: Multiple dots per transaction, colored by individual amount")

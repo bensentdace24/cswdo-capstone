@@ -6,9 +6,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AcknowledgementReceipt;
 use App\Models\ClientVerification;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ARController extends Controller
 {
+    /**
+     * Helper to trigger AI Updates
+     */
+    private function updateAI()
+    {
+        try {
+            $pythonPath = config('python.python_path', 'python');
+            $kmeansScript = public_path('python/kmeans_cluster.py');
+            $rfScript = public_path('python/random_forest_classifier.py');
+            $allBrgyScript = public_path('python/cluster_transactions_all_barangays.py');
+
+            $out1 = shell_exec("\"$pythonPath\" \"$kmeansScript\" 2>&1");
+            $out2 = shell_exec("\"$pythonPath\" \"$rfScript\" 2>&1");
+            $out3 = shell_exec("\"$pythonPath\" \"$allBrgyScript\" 2>&1");
+
+            Log::info("AI Manual Update (Staff):\nKMeans: $out1\nRF: $out2\nAllBrgy: $out3");
+
+            DB::table('ai_updates')->updateOrInsert(['id' => 1], ['updated_at' => now()]);
+        } catch (\Exception $e) {
+            Log::error("AI Update Failed (Staff): " . $e->getMessage());
+        }
+    }
+
     public function list()
     {
         $data['getRecord'] = AcknowledgementReceipt::orderBy('created_at', 'desc')->get();
@@ -115,6 +140,8 @@ class ARController extends Controller
 
         $ar->save();
 
+        $this->updateAI();
+
         return redirect('staff/ar/view/' . $ar->id . '?finance_officer_name=' . urlencode($request->finance_officer_name))
             ->with('success', 'Acknowledgement Receipt added successfully.');
     }
@@ -173,6 +200,8 @@ class ARController extends Controller
 
         $ar->save();
 
+        $this->updateAI();
+
         // ✅ Redirect back to view WITH finance officer name
         return redirect('staff/ar/view/' . $ar->id . '?finance_officer_name=' . urlencode($request->finance_officer_name))
             ->with('success', 'Acknowledgement Receipt updated successfully.');
@@ -191,6 +220,8 @@ class ARController extends Controller
         }
 
         $ar->delete();
+
+        $this->updateAI();
 
         return redirect()->back()->with('success', 'Acknowledgement Receipt deleted successfully.');
     }
