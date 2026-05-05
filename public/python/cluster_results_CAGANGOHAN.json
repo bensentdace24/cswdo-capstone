@@ -1,10 +1,10 @@
 [
     {
         "transaction_id": 6,
-        "amount": 1200.0,
+        "amount": 1100.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-04-05",
+        "date": "2026-03-09",
         "client": "Liza Soberano"
     },
     {
@@ -12,7 +12,23 @@
         "amount": 1200.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-04-05",
+        "date": "2026-03-09",
+        "client": "David Reyes"
+    },
+    {
+        "transaction_id": 26,
+        "amount": 1100.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
+        "client": "Liza Soberano"
+    },
+    {
+        "transaction_id": 34,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
         "client": "David Reyes"
     }
 ]

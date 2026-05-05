@@ -1,10 +1,10 @@
 [
     {
         "transaction_id": 4,
-        "amount": 900.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-02-10",
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
         "client": "Elena Miller"
     },
     {
@@ -12,7 +12,23 @@
         "amount": 900.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-02-10",
+        "date": "2026-03-09",
+        "client": "Mark Santos"
+    },
+    {
+        "transaction_id": 24,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
+        "client": "Elena Miller"
+    },
+    {
+        "transaction_id": 32,
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
         "client": "Mark Santos"
     },
     {
@@ -20,7 +36,15 @@
         "amount": 900.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-02-10",
+        "date": "2026-03-10",
+        "client": "Isabel Garcia"
+    },
+    {
+        "transaction_id": 40,
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-10",
         "client": "Isabel Garcia"
     }
 ]

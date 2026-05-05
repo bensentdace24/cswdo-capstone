@@ -4,7 +4,7 @@
         "amount": 1000.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-04-19",
+        "date": "2026-03-09",
         "client": "Joseph Mercado"
     },
     {
@@ -12,7 +12,23 @@
         "amount": 1000.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-04-19",
+        "date": "2026-03-09",
+        "client": "Ana Lopez"
+    },
+    {
+        "transaction_id": 25,
+        "amount": 1000.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
+        "client": "Joseph Mercado"
+    },
+    {
+        "transaction_id": 33,
+        "amount": 1000.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
         "client": "Ana Lopez"
     }
 ]

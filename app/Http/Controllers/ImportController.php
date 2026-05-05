@@ -19,23 +19,52 @@ class ImportController extends Controller
 
     public function importCsv(Request $request)
     {
+        set_time_limit(300); // Allow up to 5 minutes for processing
+
         $request->validate([
-            'csv_file' => 'required|mimes:csv,txt|max:2048',
+            'csv_file' => 'required|mimes:csv,txt|max:4096',
         ]);
 
         $file = $request->file('csv_file');
         $path = $file->getRealPath();
         
-        // Read the whole file into an array
         $lines = file($path);
         if (empty($lines)) {
             return back()->with('error', 'CSV file is empty.');
         }
 
-        // Get headers and determine delimiter (comma or tab)
         $headerLine = array_shift($lines);
         $delimiter = strpos($headerLine, "\t") !== false ? "\t" : ",";
-        $headers = array_map('trim', str_getcsv($headerLine, $delimiter));
+        $rawHeaders = str_getcsv($headerLine, $delimiter);
+
+        // Friendly mapping: CSV Label => Database Column
+        $fieldMap = [
+            'client_id'              => 'client_id',
+            'client id'              => 'client_id',
+            'barangay'               => 'barangay',
+            'amount'                 => 'amount',
+            'type'                   => 'type' ,
+            'assistance type'        => 'type',
+            'day_received'           => 'day_received',
+            'day'                    => 'day_received',
+            'month_received'         => 'month_received',
+            'month'                  => 'month_received',
+            'year_received'          => 'year_received',
+            'year'                   => 'year_received',
+            'recipient_name'         => 'recipient_name',
+            'recipient'              => 'recipient_name',
+            'amount_words'           => 'amount_words',
+            'amount in words'        => 'amount_words',
+            'client_verification_id' => 'client_verification_id',
+        ];
+
+        $headers = [];
+        foreach ($rawHeaders as $index => $header) {
+            // Strip BOM if present
+            if ($index === 0) { $header = preg_replace('/^\xEF\xBB\xBF/', '', $header); }
+            $cleanHeader = strtolower(trim($header));
+            $headers[] = $fieldMap[$cleanHeader] ?? $cleanHeader;
+        }
 
         DB::beginTransaction();
         try {
@@ -46,27 +75,18 @@ class ImportController extends Controller
                 $row = str_getcsv($line, $delimiter);
                 if (count($headers) !== count($row)) continue;
                 
-                $rowData = array_combine($headers, $row);
-                $clientId = trim($rowData['client_id'] ?? '');
+                $rowData = array_combine($headers, array_map('trim', $row));
+                $clientId = $rowData['client_id'] ?? '';
 
-                // ✅ Skip if client ID is missing or not numeric
-                if (empty($clientId) || !is_numeric($clientId)) {
-                    continue;
-                }
+                if (empty($clientId) || !is_numeric($clientId)) continue;
+                if (!DB::table('clients')->where('id', $clientId)->exists()) continue;
 
-                // ✅ Check if client exists in DB
-                if (!DB::table('clients')->where('id', $clientId)->exists()) {
-                    continue;
-                }
-
-                // 💰 Clean Amount (remove ₱, commas, spaces)
                 $rawAmount = $rowData['amount'] ?? '0';
                 $cleanAmount = (float) preg_replace('/[^\d.]/', '', $rawAmount);
 
-                // 📅 Handle Dates
-                $day   = trim($rowData['day_received'] ?? '');
-                $month = trim($rowData['month_received'] ?? '');
-                $year  = trim($rowData['year_received'] ?? '');
+                $day   = $rowData['day_received'] ?? '';
+                $month = $rowData['month_received'] ?? '';
+                $year  = $rowData['year_received'] ?? '';
 
                 if (!empty($day) && !empty($month) && !empty($year)) {
                     $monthNumber = is_numeric($month) ? $month : date('m', strtotime($month));
@@ -75,7 +95,6 @@ class ImportController extends Controller
                     $assistedDate = now()->format('Y-m-d');
                 }
 
-                // 🔍 Ensure client_verification_id exists (find latest if missing)
                 $verificationId = $rowData['client_verification_id'] ?? null;
                 if (!$verificationId || !is_numeric($verificationId)) {
                     $verificationId = DB::table('client_verifications')
@@ -83,7 +102,6 @@ class ImportController extends Controller
                         ->orderByDesc('id')
                         ->value('id');
                     
-                    // 🆕 If still no verification, create a default one automatically
                     if (!$verificationId) {
                         $verificationId = DB::table('client_verifications')->insertGetId([
                             'client_id'         => $clientId,
@@ -94,7 +112,6 @@ class ImportController extends Controller
                     }
                 }
 
-                // ✅ Insert to acknowledgement_receipts
                 AcknowledgementReceipt::create([
                     'client_id'              => $clientId,
                     'client_verification_id' => $verificationId,
@@ -109,32 +126,27 @@ class ImportController extends Controller
                     'photo'                  => $rowData['photo'] ?? null,
                     'created_at'             => $assistedDate . ' ' . now()->format('H:i:s'),
                     'updated_at'             => now(),
+                    'is_imported'            => true,
                 ]);
-                // ✅ Insert to client_assistance_logs for Eligibility
+
                 ClientAssistanceLog::create([
                     'client_id'   => $clientId,
                     'assisted_at' => $assistedDate,
                     'type'        => $rowData['type'] ?? '',
                     'created_at'  => $assistedDate . ' ' . now()->format('H:i:s'),
                     'updated_at'  => now(),
+                    'is_imported' => true,
                 ]);
 
                 $importedCount++;
             }
 
             DB::commit();
-
-            // ✅ UPDATE AI MODELS USING CONFIG PATH
+            
             $pythonPath = config('python.python_path', 'python');
-            $kmeansScript = public_path('python/kmeans_cluster.py');
-            $rfScript = public_path('python/random_forest_classifier.py');
-            $allBrgyScript = public_path('python/cluster_transactions_all_barangays.py');
-
-            $out1 = shell_exec("\"$pythonPath\" \"$kmeansScript\" 2>&1");
-            $out2 = shell_exec("\"$pythonPath\" \"$rfScript\" 2>&1");
-            $out3 = shell_exec("\"$pythonPath\" \"$allBrgyScript\" 2>&1");
-
-            Log::info("AI Import Update:\nKMeans: $out1\nRF: $out2\nAllBrgy: $out3");
+            shell_exec("\"$pythonPath\" \"" . public_path('python/kmeans_cluster.py') . "\" 2>&1");
+            shell_exec("\"$pythonPath\" \"" . public_path('python/random_forest_classifier.py') . "\" 2>&1");
+            shell_exec("\"$pythonPath\" \"" . public_path('python/cluster_transactions_all_barangays.py') . "\" 2>&1");
 
             DB::table('ai_updates')->updateOrInsert(['id' => 1], ['updated_at' => now()]);
 
@@ -145,8 +157,20 @@ class ImportController extends Controller
         }
     }
 
+    private function normalizeBoolean($value)
+    {
+        if (is_null($value)) return 0;
+        $value = strtolower(trim($value));
+        if (in_array($value, ['1', 'true', 'yes', 'y', 'checked'])) {
+            return 1;
+        }
+        return 0;
+    }
+
     public function importClientsCsv(Request $request)
     {
+        set_time_limit(300); // Allow up to 5 minutes for processing
+
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt|max:4096',
         ]);
@@ -154,48 +178,124 @@ class ImportController extends Controller
         $file = $request->file('csv_file');
         $path = $file->getRealPath();
         
-        // Use fopen to handle large files more memory-efficiently
+        $fieldMap = [
+            'full_name'              => 'full_name',
+            'full name'              => 'full_name',
+            'name'                   => 'full_name',
+            'address'                => 'address',
+            'age'                    => 'age',
+            'sex'                    => 'sex',
+            'gender'                 => 'sex',
+            'birthdate'              => 'birthdate',
+            'birth date'             => 'birthdate',
+            'is_ips'                 => 'is_ips',
+            'ips'                    => 'is_ips',
+            'ips member'             => 'is_ips',
+            'is_4ps'                 => 'is_4ps',
+            '4ps'                    => 'is_4ps',
+            '4ps member'             => 'is_4ps',
+            'civil_status'           => 'civil_status',
+            'civil status'           => 'civil_status',
+            'contact_number'         => 'contact_number',
+            'contact'                => 'contact_number',
+            'birthplace'             => 'birthplace',
+            'birth place'            => 'birthplace',
+            'educational_attainment' => 'educational_attainment',
+            'education'              => 'educational_attainment',
+            'occupation'             => 'occupation',
+            'religion'               => 'religion',
+        ];
+
         if (($handle = fopen($path, 'r')) !== FALSE) {
-            $headers = fgetcsv($handle, 1000, ",");
-            $headers = array_map('trim', $headers);
+            // Read the first line to detect delimiter
+            $firstLine = fgets($handle);
+            rewind($handle);
+
+            $delimiters = [",", ";", "\t"];
+            $delimiter = ",";
+            $maxCount = 0;
+            foreach ($delimiters as $d) {
+                $count = count(str_getcsv($firstLine, $d));
+                if ($count > $maxCount) {
+                    $maxCount = $count;
+                    $delimiter = $d;
+                }
+            }
+
+            $rawHeaders = fgetcsv($handle, 1000, $delimiter);
+            if (!$rawHeaders) {
+                fclose($handle);
+                return back()->with('error', 'CSV file is empty or invalid.');
+            }
+
+            $headers = [];
+            foreach ($rawHeaders as $index => $header) {
+                // Strip UTF-8 BOM from the first header if present
+                if ($index === 0) {
+                    $header = preg_replace('/^\xEF\xBB\xBF/', '', $header);
+                }
+                $cleanHeader = strtolower(trim($header));
+                $headers[] = $fieldMap[$cleanHeader] ?? $cleanHeader;
+            }
+
+            // Validate Required Headers
+            $requiredHeaders = ['full_name'];
+            foreach ($requiredHeaders as $required) {
+                if (!in_array($required, $headers)) {
+                    $friendlyName = array_search($required, $fieldMap) ?: $required;
+                    fclose($handle);
+                    return back()->with('error', "Missing required column: $friendlyName");
+                }
+            }
 
             $importedCount = 0;
             $skippedCount = 0;
+            $errorLogs = [];
+            $rowNumber = 1;
 
-            DB::beginTransaction();
-            try {
-                while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    if (count($headers) !== count($row)) {
-                        continue; // Skip malformed rows
-                    }
-                    
-                    $rowData = array_combine($headers, $row);
-                    $fullName = trim($rowData['full_name'] ?? '');
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== FALSE) {
+                $rowNumber++;
+                if (count($headers) !== count($row)) {
+                    $errorLogs[] = "Row {$rowNumber}: Column count mismatch.";
+                    continue; 
+                }
+                
+                $rowData = array_combine($headers, array_map(function($val) {
+                    $trimmed = trim($val);
+                    return $trimmed === '' ? null : $trimmed;
+                }, $row));
+                
+                $fullName = $rowData['full_name'] ?? null;
 
-                    if (empty($fullName)) {
-                        continue;
-                    }
+                if (empty($fullName)) {
+                    $errorLogs[] = "Row {$rowNumber}: Full Name is required.";
+                    continue;
+                }
 
-                    $age = $rowData['age'] ?? null;
-                    $sex = $rowData['sex'] ?? null;
+                $age = $rowData['age'] ?? null;
+                $sex = $rowData['sex'] ?? null;
+                $birthdate = $rowData['birthdate'] ?? null;
 
-                    // 🔍 Check for existing client with same name, age, and sex to avoid duplicates
-                    $existing = Client::where('full_name', $fullName)
-                        ->where('age', $age)
-                        ->where('sex', $sex)
-                        ->first();
+                // 🔍 Stronger Duplicate Check: Name + Birthdate OR Name + Age + Sex
+                $query = Client::where('full_name', $fullName);
+                if ($birthdate) {
+                    $query->where('birthdate', $birthdate);
+                } else {
+                    $query->where('age', $age)->where('sex', $sex);
+                }
 
-                    if ($existing) {
-                        $skippedCount++;
-                        continue;
-                    }
+                if ($query->exists()) {
+                    $skippedCount++;
+                    continue;
+                }
 
-                    // 🧾 Create new client
+                DB::beginTransaction();
+                try {
                     Client::create([
                         'full_name'              => $fullName,
                         'address'                => $rowData['address'] ?? null,
-                        'is_ips'                 => isset($rowData['is_ips']) ? (int)$rowData['is_ips'] : 0,
-                        'is_4ps'                 => isset($rowData['is_4ps']) ? (int)$rowData['is_4ps'] : 0,
+                        'is_ips'                 => $this->normalizeBoolean($rowData['is_ips'] ?? null),
+                        'is_4ps'                 => $this->normalizeBoolean($rowData['is_4ps'] ?? null),
                         'age'                    => $age,
                         'birthplace'             => $rowData['birthplace'] ?? null,
                         'contact_number'         => $rowData['contact_number'] ?? null,
@@ -204,23 +304,29 @@ class ImportController extends Controller
                         'religion'               => $rowData['religion'] ?? null,
                         'sex'                    => $sex,
                         'civil_status'           => $rowData['civil_status'] ?? null,
-                        'birthdate'              => !empty($rowData['birthdate']) ? $rowData['birthdate'] : null,
+                        'birthdate'              => $birthdate,
                         'created_at'             => now(),
                         'updated_at'             => now(),
                     ]);
 
+                    DB::commit();
                     $importedCount++;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    $errorLogs[] = "Row {$rowNumber}: " . $e->getMessage();
                 }
-
-                DB::commit();
-                fclose($handle);
-
-                return back()->with('success', "✅ Import Complete! $importedCount beneficiaries added, $skippedCount duplicates skipped.");
-            } catch (\Exception $e) {
-                DB::rollBack();
-                fclose($handle);
-                return back()->with('error', 'Import failed: ' . $e->getMessage());
             }
+            fclose($handle);
+
+            $message = "✅ Import Complete! $importedCount added, $skippedCount duplicates skipped.";
+            if (count($errorLogs) > 0) {
+                $message .= " ⚠️ " . count($errorLogs) . " rows failed.";
+            }
+
+            return back()->with([
+                'success' => $message,
+                'import_errors' => $errorLogs
+            ]);
         }
 
         return back()->with('error', 'Could not open CSV file.');

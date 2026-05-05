@@ -1,0 +1,50 @@
+[
+    {
+        "transaction_id": 3,
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
+        "client": "Robert Davis"
+    },
+    {
+        "transaction_id": 11,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
+        "client": "Maria Cruz"
+    },
+    {
+        "transaction_id": 23,
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
+        "client": "Robert Davis"
+    },
+    {
+        "transaction_id": 31,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
+        "client": "Maria Cruz"
+    },
+    {
+        "transaction_id": 19,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-10",
+        "client": "Ramon Bautista"
+    },
+    {
+        "transaction_id": 39,
+        "amount": 1200.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-10",
+        "client": "Ramon Bautista"
+    }
+]

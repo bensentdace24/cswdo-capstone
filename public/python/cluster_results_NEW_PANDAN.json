@@ -1,26 +1,50 @@
 [
     {
         "transaction_id": 2,
-        "amount": 1200.0,
-        "cluster_label": "High Need",
-        "cluster": "High Need",
-        "date": "2026-03-15",
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
         "client": "Jane Smith"
     },
     {
         "transaction_id": 10,
-        "amount": 1200.0,
+        "amount": 1000.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-15",
+        "date": "2026-03-09",
+        "client": "Jovenal Tan"
+    },
+    {
+        "transaction_id": 22,
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
+        "client": "Jane Smith"
+    },
+    {
+        "transaction_id": 30,
+        "amount": 1000.0,
+        "cluster_label": "High Need",
+        "cluster": "High Need",
+        "date": "2026-03-09",
         "client": "Jovenal Tan"
     },
     {
         "transaction_id": 18,
-        "amount": 1200.0,
-        "cluster_label": "High Need",
-        "cluster": "High Need",
-        "date": "2026-03-15",
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-10",
+        "client": "Carlos Dela Cruz"
+    },
+    {
+        "transaction_id": 38,
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-10",
         "client": "Carlos Dela Cruz"
     }
 ]

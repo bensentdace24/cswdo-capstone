@@ -19,6 +19,18 @@
                         </button>
                     </div>
                 @endif
+
+                @if (session('import_errors'))
+                    <div class="alert alert-warning shadow-sm">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Import Issues Detected</h5>
+                        <ul class="mb-0" style="max-height: 200px; overflow-y: auto;">
+                            @foreach (session('import_errors') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         {{ session('error') }}
@@ -49,8 +61,8 @@
                                 <hr>
                                 <p class="text-sm text-muted">
                                     <strong>💡 CSV Requirements:</strong><br>
-                                    Headers must include: <code>full_name, address, age, sex, birthdate, is_ips, is_4ps, civil_status</code><br>
-                                    Optional: <code>contact_number, birthplace, educational_attainment, occupation, religion</code>
+                                    Headers (Friendly): <code>Full Name, Address, Age, Sex, Birthdate, IPS Member, 4Ps Member, Civil Status</code><br>
+                                    <em>* Boolean fields (IPS/4Ps) support: Yes/No, True/False, or 1/0.</em>
                                 </p>
                             </div>
                         </div>
@@ -76,8 +88,8 @@
                                 <hr>
                                 <p class="text-sm text-muted">
                                     <strong>💡 CSV Requirements:</strong><br>
-                                    Headers must include: <code>client_id, barangay, amount, type, day_received, month_received, year_received</code><br>
-                                    <em>Note: Client IDs must already exist in the system.</em>
+                                    Headers (Friendly): <code>Client ID, Barangay, Amount, Assistance Type, Day, Month, Year</code><br>
+                                    <em>* Note: Client IDs must already exist in the system.</em>
                                 </p>
                             </div>
                         </div>

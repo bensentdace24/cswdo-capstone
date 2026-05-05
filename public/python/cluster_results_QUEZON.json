@@ -1,18 +1,34 @@
 [
     {
         "transaction_id": 8,
-        "amount": 1100.0,
-        "cluster_label": "High Need",
-        "cluster": "High Need",
-        "date": "2026-02-06",
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
         "client": "Catriona Magnayon"
     },
     {
         "transaction_id": 16,
-        "amount": 1100.0,
-        "cluster_label": "High Need",
-        "cluster": "High Need",
-        "date": "2026-02-06",
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
+        "client": "Miguel Torres"
+    },
+    {
+        "transaction_id": 28,
+        "amount": 800.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
+        "client": "Catriona Magnayon"
+    },
+    {
+        "transaction_id": 36,
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-09",
         "client": "Miguel Torres"
     }
 ]

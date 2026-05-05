@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('acknowledgement_receipts', function (Blueprint $table) {
-           // $table->boolean('is_imported')->default(false)->after('updated_at');
+            $table->boolean('is_imported')->default(false)->after('updated_at');
         });
 
         Schema::table('client_assistance_logs', function (Blueprint $table) {
-            //$table->boolean('is_imported')->default(false)->after('updated_at');
+            $table->boolean('is_imported')->default(false)->after('updated_at');
         });
     }
 
@@ -26,11 +26,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('acknowledgement_receipts', function (Blueprint $table) {
-           // $table->dropColumn('is_imported');
+            $table->dropColumn('is_imported');
         });
 
         Schema::table('client_assistance_logs', function (Blueprint $table) {
-           // $table->dropColumn('is_imported');
+            $table->dropColumn('is_imported');
         });
     }
 };
