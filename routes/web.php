@@ -169,8 +169,6 @@ Route::group(['middleware' => 'admin'], function () {
         Route::get('admin/receipts/import', [ImportController::class, 'showImportForm'])->name('admin.import.form');
         Route::post('admin/receipts/import', [ImportController::class, 'importCsv'])->name('admin.import.csv');
         Route::post('admin/clients/import', [ImportController::class, 'importClientsCsv'])->name('admin.import.clients');
-        Route::delete('/imported-data/delete', [ImportController::class, 'deleteImportedData'])
-            ->name('imported.delete');
     });
 
     Route::get('/admin/update-ai', function () {

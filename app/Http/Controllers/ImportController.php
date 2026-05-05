@@ -332,18 +332,4 @@ class ImportController extends Controller
         return back()->with('error', 'Could not open CSV file.');
     }
 
-    public function deleteImportedData()
-    {
-        // ✅ Delete only rows that came from CSV import
-        AcknowledgementReceipt::where('is_imported', true)->delete();
-        ClientAssistanceLog::where('is_imported', true)->delete();
-
-        // ✅ Recompute AI analytics so dashboard stays accurate
-        shell_exec("python " . public_path('python/kmeans_cluster.py'));
-        shell_exec("python " . public_path('python/random_forest_classifier.py'));
-
-        DB::table('ai_updates')->updateOrInsert([], ['updated_at' => now()]);
-
-        return back()->with('success', '✅ All imported data removed successfully!');
-    }
 }
