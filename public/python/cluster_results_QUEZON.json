@@ -4,7 +4,7 @@
         "amount": 800.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-03-09",
+        "date": "2026-03-12",
         "client": "Catriona Magnayon"
     },
     {
@@ -12,23 +12,7 @@
         "amount": 900.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-03-09",
-        "client": "Miguel Torres"
-    },
-    {
-        "transaction_id": 28,
-        "amount": 800.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-09",
-        "client": "Catriona Magnayon"
-    },
-    {
-        "transaction_id": 36,
-        "amount": 900.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-09",
+        "date": "2026-03-12",
         "client": "Miguel Torres"
     }
 ]

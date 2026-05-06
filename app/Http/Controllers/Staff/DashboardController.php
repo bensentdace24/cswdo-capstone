@@ -24,7 +24,7 @@ class DashboardController extends \App\Http\Controllers\Controller
             $clientCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
                 $q->whereMonth('assisted_at', date('m', strtotime($month)))
                     ->whereYear('assisted_at', date('Y', strtotime($month)));
-            })->distinct('client_id')->count('client_id');
+            })->count();
             $medicalCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
                 $q->whereMonth('assisted_at', date('m', strtotime($month)))
                     ->whereYear('assisted_at', date('Y', strtotime($month)));

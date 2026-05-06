@@ -1,50 +1,56 @@
 [
     {
-        "barangay": "CAGANGOHAN",
+        "barangay": "A. O. FLOIRENDO",
         "total_assistances": 4,
-        "total_amount": 4600.0,
-        "cluster_label": "High Need"
+        "total_amount": 3300.0,
+        "cluster_label": "Low Need"
+    },
+    {
+        "barangay": "CAGANGOHAN",
+        "total_assistances": 1,
+        "total_amount": 900.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "GREDU",
-        "total_assistances": 6,
-        "total_amount": 5800.0,
-        "cluster_label": "High Need"
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "J.P. LAUREL",
-        "total_assistances": 4,
-        "total_amount": 4000.0,
-        "cluster_label": "High Need"
+        "total_assistances": 2,
+        "total_amount": 1900.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "NEW PANDAN",
-        "total_assistances": 6,
-        "total_amount": 5400.0,
-        "cluster_label": "High Need"
+        "total_assistances": 4,
+        "total_amount": 3600.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "QUEZON",
-        "total_assistances": 4,
-        "total_amount": 3400.0,
-        "cluster_label": "High Need"
+        "total_assistances": 2,
+        "total_amount": 1700.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "SALVACION",
-        "total_assistances": 4,
-        "total_amount": 3800.0,
-        "cluster_label": "High Need"
+        "total_assistances": 1,
+        "total_amount": 700.0,
+        "cluster_label": "Low Need"
     },
     {
         "barangay": "SAN FRANCISCO",
-        "total_assistances": 6,
-        "total_amount": 6000.0,
-        "cluster_label": "High Need"
+        "total_assistances": 2,
+        "total_amount": 2100.0,
+        "cluster_label": "Low Need"
     },
     {
-        "barangay": "STO. NI\u00c3\u00b1O",
-        "total_assistances": 6,
-        "total_amount": 6400.0,
-        "cluster_label": "High Need"
+        "barangay": "STO. NI\u00d1O",
+        "total_assistances": 3,
+        "total_amount": 3200.0,
+        "cluster_label": "Low Need"
     }
 ]

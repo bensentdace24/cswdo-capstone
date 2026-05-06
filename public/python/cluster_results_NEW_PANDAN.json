@@ -4,31 +4,23 @@
         "amount": 900.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-03-09",
+        "date": "2026-03-12",
         "client": "Jane Smith"
+    },
+    {
+        "transaction_id": 9,
+        "amount": 900.0,
+        "cluster_label": "Medium Need",
+        "cluster": "Medium Need",
+        "date": "2026-03-12",
+        "client": "Ricardo Cardo"
     },
     {
         "transaction_id": 10,
         "amount": 1000.0,
         "cluster_label": "High Need",
         "cluster": "High Need",
-        "date": "2026-03-09",
-        "client": "Jovenal Tan"
-    },
-    {
-        "transaction_id": 22,
-        "amount": 900.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-09",
-        "client": "Jane Smith"
-    },
-    {
-        "transaction_id": 30,
-        "amount": 1000.0,
-        "cluster_label": "High Need",
-        "cluster": "High Need",
-        "date": "2026-03-09",
+        "date": "2026-03-12",
         "client": "Jovenal Tan"
     },
     {
@@ -36,15 +28,7 @@
         "amount": 800.0,
         "cluster_label": "Medium Need",
         "cluster": "Medium Need",
-        "date": "2026-03-10",
-        "client": "Carlos Dela Cruz"
-    },
-    {
-        "transaction_id": 38,
-        "amount": 800.0,
-        "cluster_label": "Medium Need",
-        "cluster": "Medium Need",
-        "date": "2026-03-10",
+        "date": "2026-03-12",
         "client": "Carlos Dela Cruz"
     }
 ]

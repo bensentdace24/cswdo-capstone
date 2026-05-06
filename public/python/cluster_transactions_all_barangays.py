@@ -46,6 +46,17 @@ ORDER BY ar.barangay, ar.created_at
 """
 
 df_transactions = pd.read_sql(transaction_query, db)
+
+# Standardize A.O. FLOIRENDO naming
+df_transactions["barangay"] = df_transactions["barangay"].replace({
+    "A.O FLORIENDO": "A.O. FLOIRENDO",
+    "A O FLORIENDO": "A.O. FLOIRENDO",
+    "A.O. FLORIENDO": "A.O. FLOIRENDO",
+    "A O FLOIRENDO": "A.O. FLOIRENDO",
+    "AO FLORIENDO": "A.O. FLOIRENDO",
+    "AO FLOIRENDO": "A.O. FLOIRENDO"
+})
+
 print(f"[INFO] Found {len(df_transactions)} total transactions")
 
 if df_transactions.empty:
@@ -84,9 +95,10 @@ for barangay, group in barangay_groups:
     total_amount = float(group['amount'].sum())
     total_assistances = len(group)
 
-    if total_amount >= 3000 or total_assistances >= 4:
+    # Frequency-based thresholds (Option B)
+    if total_assistances >= 31:
         cluster_label = "High Need"
-    elif total_amount >= 2000 or total_assistances >= 3:
+    elif total_assistances >= 11:
         cluster_label = "Medium Need"
     else:
         cluster_label = "Low Need"
@@ -132,6 +144,8 @@ def normalize_filename(barangay):
         'A O FLORIENDO': 'A._O._FLOIRENDO',
         'A.O. FLORIENDO': 'A._O._FLOIRENDO',
         'A. O. FLORIENDO': 'A._O._FLOIRENDO',
+        'A O FLOIRENDO': 'A._O._FLOIRENDO',
+        'A.O. FLOIRENDO': 'A._O._FLOIRENDO',
         'JP LAUREL': 'J.P._LAUREL',
         'J.P. LAUREL': 'J.P._LAUREL',
         'J. P. LAUREL': 'J.P._LAUREL',

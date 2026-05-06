@@ -391,10 +391,10 @@
                 if (!name) return '';
 
                 const mapping = {
-                    'A O FLORIENDO': 'A._O._FLOIRENDO',
                     'A O FLOIRENDO': 'A._O._FLOIRENDO',
+                    'A.O. FLOIRENDO': 'A._O._FLOIRENDO',
+                    'A O FLORIENDO': 'A._O._FLOIRENDO',
                     'A.O. FLORIENDO': 'A._O._FLOIRENDO',
-                    'A. O. FLORIENDO': 'A._O._FLOIRENDO',
                     'JP LAUREL': 'J.P._LAUREL',
                     'J.P. LAUREL': 'J.P._LAUREL',
                     'J P LAUREL': 'J.P._LAUREL',

@@ -24,7 +24,7 @@ class DashboardController extends Controller
 	    $clientCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
                 $q->whereMonth('assisted_at', date('m', strtotime($month)))
                     ->whereYear('assisted_at', date('Y', strtotime($month)));
-            })->distinct('client_id')->count('client_id');
+            })->count();
 
             $medicalCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
                 $q->whereMonth('assisted_at', date('m', strtotime($month)))
@@ -52,8 +52,34 @@ class DashboardController extends Controller
         }
 
         if (Auth::user()->user_type == 2) {
-            $clientCount = \App\Models\Client::count();
-            return view('staff.dashboard', compact('clientCount'));
+            $month = request('month');
+
+            $clientCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->count();
+
+            $medicalCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->where('type', 'Medical')->count();
+
+            $pharmacyCount = ClientAssistanceLog::when($month, function ($q) use ($month) {
+                $q->whereMonth('assisted_at', date('m', strtotime($month)))
+                    ->whereYear('assisted_at', date('Y', strtotime($month)));
+            })->where('type', 'Pharmacy')->count();
+
+            $totalAmount = AcknowledgementReceipt::when($month, function ($q) use ($month) {
+                $q->whereMonth('created_at', date('m', strtotime($month)))
+                    ->whereYear('created_at', date('Y', strtotime($month)));
+            })->sum('amount');
+
+            return view('staff.dashboard', compact(
+                'clientCount',
+                'medicalCount',
+                'pharmacyCount',
+                'totalAmount'
+            ));
         }
 
         // 🟨 STUDENT SIDE

@@ -283,7 +283,7 @@
                             <div class="small-box bg-beneficiary-grad">
                                 <div class="inner p-3">
                                     <h3>{{ $clientCount }}</h3>
-                                    <p>Total Registered Beneficiaries</p>
+                                    <p>Total Assistance Records</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-users"></i>
@@ -304,8 +304,8 @@
 
                     <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
                         A total of
-                        <strong style="color: #007bff;">{{ $clientCount }}</strong> beneficiaries were recorded.
-                        The system has processed
+                        <strong style="color: #007bff;">{{ $clientCount }}</strong> assistance records were processed.
+                        The system has recorded
                         <strong style="color: #007bff;">{{ $medicalCount }}</strong> medical and
                         <strong style="color: #007bff;">{{ $pharmacyCount }}</strong> pharmacy assistance cases, totaling
                         <strong style="color: #007bff;">₱{{ number_format($totalAmount, 2) }}</strong> disbursed to date.

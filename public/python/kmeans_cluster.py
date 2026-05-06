@@ -107,6 +107,14 @@ raw = pd.read_sql(query, db)
 raw["barangay"] = raw["barangay"].apply(clean_barangay)
 raw = raw.dropna(subset=["barangay"])
 
+# Fix spelling to A.O. FLOIRENDO
+raw["barangay"] = raw["barangay"].replace({
+    "A.O FLORIENDO": "A.O. FLOIRENDO",
+    "A O FLORIENDO": "A.O. FLOIRENDO",
+    "A.O. FLORIENDO": "A.O. FLOIRENDO",
+    "A O FLOIRENDO": "A.O. FLOIRENDO"
+})
+
 # ======================================
 # 4. GROUP PROPERLY (NO DUPLICATES)
 # ======================================
@@ -116,35 +124,23 @@ barangay_data = raw.groupby("barangay").agg(
 ).reset_index()
 
 print("Barangays detected:", barangay_data.shape[0])
-print("List:", sorted(barangay_data["barangay"].unique()))
 
 # ======================================
-# If very few barangays
+# Frequency-based Labeling (Option B)
 # ======================================
-if barangay_data.shape[0] < 3:
-    print("[WARNING] Not enough barangays.")
-    exit()
+def assign_label(row):
+    count = row['total_assistances']
+    if count >= 31:
+        return "High Need"
+    elif count >= 11:
+        return "Medium Need"
+    else:
+        return "Low Need"
 
-# ======================================
-# Prepare for clustering
-# ======================================
-X = barangay_data[['total_assistances', 'total_amount']]
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# ======================================
-# K-Means with correct labels
-# ======================================
-kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
-barangay_data["cluster_idx"] = kmeans.fit_predict(X_scaled)
-
-centroids = kmeans.cluster_centers_
-scores = (centroids[:,0] * 0.5) + (centroids[:,1] * 0.5)
-order = np.argsort(scores)[::-1]
-
-labels = ["High Need", "Medium Need", "Low Need"]
-label_map = {order[i]: labels[i] for i in range(3)}
-barangay_data["cluster_label"] = barangay_data["cluster_idx"].map(label_map)
+barangay_data["cluster_label"] = barangay_data.apply(assign_label, axis=1)
+# Keep cluster_idx for compatibility
+label_to_idx = {"High Need": 0, "Medium Need": 1, "Low Need": 2}
+barangay_data["cluster_idx"] = barangay_data["cluster_label"].map(label_to_idx)
 
 # ======================================
 # SAVE JSON
