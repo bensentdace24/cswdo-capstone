@@ -163,6 +163,8 @@ class ReportsController extends Controller
     // ✅ HELPER FUNCTION (MUST BE OUTSIDE index())
     private function normalizeBarangay($name)
     {
+        if (!$name) return 'UNKNOWN';
+        
         $name = strtoupper($name);
 
         // Remove (POBLACION), (ROXAS), etc
@@ -174,21 +176,36 @@ class ReportsController extends Controller
         // Remove dots
         $name = str_replace('.', '', $name);
 
+        // Normalize STO to SANTO
+        if (str_starts_with($name, 'STO ')) {
+            $name = 'SANTO ' . substr($name, 4);
+        }
+        if ($name == 'STO') {
+            $name = 'SANTO';
+        }
+
         // Normalize spaces
         $name = preg_replace('/\s+/', ' ', trim($name));
 
         return $name;
     }
+
     private function applyBarangayFilter($query, $barangay)
     {
         if (!$barangay) {
             return $query;
         }
 
-        $clean = str_replace(['.', ' '], '', strtoupper($barangay));
+        // Standardize the filter input
+        $clean = strtoupper($barangay);
+        $clean = str_replace(['.', ' ', 'Ñ'], ['', '', 'N'], $clean);
+        if (str_starts_with($clean, 'STO')) {
+            $clean = 'SANTO' . substr($clean, 3);
+        }
 
+        // Apply same logic in SQL
         return $query->whereRaw(
-            "REPLACE(REPLACE(UPPER(barangay), '.', ''), ' ', '') = ?",
+            "REPLACE(REPLACE(REPLACE(REPLACE(UPPER(barangay), 'Ñ', 'N'), '.', ''), ' ', ''), 'STO', 'SANTO') = ?",
             [$clean]
         );
     }

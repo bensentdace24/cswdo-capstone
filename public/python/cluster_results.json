@@ -1,56 +1,274 @@
 [
     {
-        "barangay": "A. O. FLOIRENDO",
-        "total_assistances": 4,
-        "total_amount": 3300.0,
-        "cluster_label": "Low Need"
+        "barangay": "A O FLOIRENDO FLOIRENDO FLOIRENDO",
+        "total_assistances": 1,
+        "total_amount": 700.0,
+        "need_index": 1200.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "A.O. FLOIRENDO",
+        "total_assistances": 5,
+        "total_amount": 4900.0,
+        "need_index": 7400.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "BUENAVISTA",
+        "total_assistances": 2,
+        "total_amount": 1900.0,
+        "need_index": 2900.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "CACAO",
+        "total_assistances": 2,
+        "total_amount": 1800.0,
+        "need_index": 2800.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
     },
     {
         "barangay": "CAGANGOHAN",
-        "total_assistances": 1,
-        "total_amount": 900.0,
-        "cluster_label": "Low Need"
+        "total_assistances": 4,
+        "total_amount": 4100.0,
+        "need_index": 6100.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "CONSOLACION",
+        "total_assistances": 6,
+        "total_amount": 5700.0,
+        "need_index": 8700.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "DAPCO",
+        "total_assistances": 2,
+        "total_amount": 2000.0,
+        "need_index": 3000.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
     },
     {
         "barangay": "GREDU",
         "total_assistances": 1,
         "total_amount": 1200.0,
-        "cluster_label": "Low Need"
+        "need_index": 1700.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
     },
     {
         "barangay": "J.P. LAUREL",
+        "total_assistances": 1,
+        "total_amount": 1100.0,
+        "need_index": 1600.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "KASILAK",
+        "total_assistances": 1,
+        "total_amount": 1200.0,
+        "need_index": 1700.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "KATIPUNAN",
         "total_assistances": 2,
-        "total_amount": 1900.0,
-        "cluster_label": "Low Need"
+        "total_amount": 1500.0,
+        "need_index": 2500.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "KAUSWAGAN",
+        "total_assistances": 3,
+        "total_amount": 2900.0,
+        "need_index": 4400.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "KIOTOY",
+        "total_assistances": 5,
+        "total_amount": 4300.0,
+        "need_index": 6800.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "LITTLE PANAY",
+        "total_assistances": 7,
+        "total_amount": 7400.0,
+        "need_index": 10900.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "MABUNAO",
+        "total_assistances": 2,
+        "total_amount": 2200.0,
+        "need_index": 3200.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "MADUAO",
+        "total_assistances": 4,
+        "total_amount": 3900.0,
+        "need_index": 5900.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "MALATIVAS",
+        "total_assistances": 7,
+        "total_amount": 24800.0,
+        "need_index": 28300.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "MANAY",
+        "total_assistances": 4,
+        "total_amount": 4200.0,
+        "need_index": 6200.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "NANYO",
+        "total_assistances": 5,
+        "total_amount": 5100.0,
+        "need_index": 7600.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "NEW MALITBOG",
+        "total_assistances": 7,
+        "total_amount": 6600.0,
+        "need_index": 10100.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
     },
     {
         "barangay": "NEW PANDAN",
-        "total_assistances": 4,
-        "total_amount": 3600.0,
-        "cluster_label": "Low Need"
+        "total_assistances": 5,
+        "total_amount": 4700.0,
+        "need_index": 7200.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
     },
     {
         "barangay": "QUEZON",
         "total_assistances": 2,
-        "total_amount": 1700.0,
-        "cluster_label": "Low Need"
+        "total_amount": 2100.0,
+        "need_index": 3100.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
     },
     {
         "barangay": "SALVACION",
-        "total_assistances": 1,
-        "total_amount": 700.0,
-        "cluster_label": "Low Need"
+        "total_assistances": 2,
+        "total_amount": 1900.0,
+        "need_index": 2900.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
     },
     {
         "barangay": "SAN FRANCISCO",
-        "total_assistances": 2,
-        "total_amount": 2100.0,
-        "cluster_label": "Low Need"
+        "total_assistances": 1,
+        "total_amount": 1100.0,
+        "need_index": 1600.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
     },
     {
-        "barangay": "STO. NI\u00d1O",
+        "barangay": "SAN NICOLAS",
+        "total_assistances": 5,
+        "total_amount": 4800.0,
+        "need_index": 7300.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "SAN PEDRO",
+        "total_assistances": 2,
+        "total_amount": 1900.0,
+        "need_index": 2900.0,
+        "cluster_label": "Low Need",
+        "cluster_idx": 2
+    },
+    {
+        "barangay": "SAN ROQUE",
+        "total_assistances": 6,
+        "total_amount": 6000.0,
+        "need_index": 9000.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
+    },
+    {
+        "barangay": "SAN VICENTE",
         "total_assistances": 3,
-        "total_amount": 3200.0,
-        "cluster_label": "Low Need"
+        "total_amount": 3600.0,
+        "need_index": 5100.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "SANTA CRUZ",
+        "total_assistances": 4,
+        "total_amount": 4200.0,
+        "need_index": 6200.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "SANTO NI\u00d1O",
+        "total_assistances": 3,
+        "total_amount": 2600.0,
+        "need_index": 4100.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "SINDATON",
+        "total_assistances": 3,
+        "total_amount": 3500.0,
+        "need_index": 5000.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "SOUTHERN DAVAO",
+        "total_assistances": 2,
+        "total_amount": 2100.0,
+        "need_index": 3100.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "TAGPORE",
+        "total_assistances": 3,
+        "total_amount": 2800.0,
+        "need_index": 4300.0,
+        "cluster_label": "Medium Need",
+        "cluster_idx": 1
+    },
+    {
+        "barangay": "WATERFALL",
+        "total_assistances": 8,
+        "total_amount": 8000.0,
+        "need_index": 12000.0,
+        "cluster_label": "High Need",
+        "cluster_idx": 0
     }
 ]

@@ -26,6 +26,44 @@ except mysql.connector.Error as err:
 print("[INFO] Connected to database")
 
 # ======================================
+# CLEANING FUNCTION
+# ======================================
+def clean_barangay(b):
+    if not isinstance(b, str):
+        return None
+
+    b = b.replace("\n", " ").replace("\r", " ").strip().upper()
+    b = b.replace(".", "").replace("Ñ", "N")
+    
+    if b.startswith("STO "):
+        b = "SANTO " + b[4:]
+    elif b == "STO":
+        b = "SANTO"
+
+    replacements = {
+        "BARANGAY": "A.O. FLOIRENDO",
+        "BALIK-PROBINSYA": "A.O. FLOIRENDO",
+        "CLIENT": "A.O. FLOIRENDO",
+        "TRANSIENT CLIENT": "UPPER LICANAN",
+        "JP LAUREL": "J.P. LAUREL",
+        "JP": "J.P. LAUREL",
+        "CAGGANGOHAN": "CAGANGOHAN",
+        "CGANGOHAN": "CAGANGOHAN",
+        "SO DAVAO": "SOUTHERN DAVAO",
+        "S O DAVAO": "SOUTHERN DAVAO",
+        "SOUTHER DAVAO": "SOUTHERN DAVAO",
+        "SANTO NINO": "SANTO NIÑO",
+        "STA CRUZ": "SANTA CRUZ",
+        "NEW VISYAS": "NEW VISAYAS",
+        "NEW MALAGA": "NEW MALITBOG",
+        "SAVACION": "SALVACION",
+        "SENORITA": "SALVACION",
+        "LEMONSITO": "KIOTOY",
+        "LEMON SITO": "KIOTOY",
+    }
+    return replacements.get(b, b)
+
+# ======================================
 # STEP 1: GET ALL TRANSACTIONS
 # ======================================
 print("\n[INFO] Fetching ALL transactions...")
@@ -33,7 +71,7 @@ print("\n[INFO] Fetching ALL transactions...")
 transaction_query = """
 SELECT
     ar.id AS transaction_id,
-    UPPER(TRIM(ar.barangay)) AS barangay,
+    ar.barangay,
     ar.amount,
     DATE_FORMAT(ar.created_at, '%Y-%m-%d') as date,
     c.full_name AS client_name
@@ -47,15 +85,9 @@ ORDER BY ar.barangay, ar.created_at
 
 df_transactions = pd.read_sql(transaction_query, db)
 
-# Standardize A.O. FLOIRENDO naming
-df_transactions["barangay"] = df_transactions["barangay"].replace({
-    "A.O FLORIENDO": "A.O. FLOIRENDO",
-    "A O FLORIENDO": "A.O. FLOIRENDO",
-    "A.O. FLORIENDO": "A.O. FLOIRENDO",
-    "A O FLOIRENDO": "A.O. FLOIRENDO",
-    "AO FLORIENDO": "A.O. FLOIRENDO",
-    "AO FLOIRENDO": "A.O. FLOIRENDO"
-})
+# Clean barangay names
+df_transactions["barangay"] = df_transactions["barangay"].apply(clean_barangay)
+df_transactions = df_transactions.dropna(subset=["barangay"])
 
 print(f"[INFO] Found {len(df_transactions)} total transactions")
 
@@ -88,22 +120,52 @@ df_transactions['cluster_label'] = df_transactions['transaction_color']
 # ======================================
 print("\n[INFO] Creating FULL DISTRIBUTION summary (1 dot per barangay)...")
 
+# 1. Calculate Need Index per barangay: Total Amount + (Count * 500)
+brgy_summary = df_transactions.groupby('barangay').agg(
+    total_amount=('amount', 'sum'),
+    total_assistances=('amount', 'count')
+)
+brgy_summary['need_index'] = brgy_summary['total_amount'] + (brgy_summary['total_assistances'] * 500)
+
+# 2. Calculate dynamic thresholds based on Need Index
+high_threshold = brgy_summary['need_index'].quantile(0.70)
+low_threshold = brgy_summary['need_index'].quantile(0.30)
+
+# Fallback for small or uniform datasets
+if high_threshold == low_threshold:
+    high_threshold = brgy_summary['need_index'].mean() + 1
+    low_threshold = brgy_summary['need_index'].mean()
+
+print(f"[INFO] Dynamic Thresholds (Index): High >= {high_threshold:.1f}, Low < {low_threshold:.1f}")
+
 summary_data = []
-barangay_groups = df_transactions.groupby('barangay')
+for barangay, row in brgy_summary.iterrows():
+    total_amount = float(row['total_amount'])
+    total_assistances = int(row['total_assistances'])
+    score = float(row['need_index'])
 
-for barangay, group in barangay_groups:
-    total_amount = float(group['amount'].sum())
-    total_assistances = len(group)
-
-    # Frequency-based thresholds (Option B)
-    if total_assistances >= 31:
+    # Use dynamic thresholds on the Need Index
+    if score >= high_threshold:
         cluster_label = "High Need"
-    elif total_assistances >= 11:
+    elif score >= low_threshold:
         cluster_label = "Medium Need"
     else:
         cluster_label = "Low Need"
 
+    # Get the raw group for breakdown
+    group = df_transactions[df_transactions['barangay'] == barangay]
+
     summary_data.append({
+        'barangay': barangay,
+        'total_assistances': total_assistances,
+        'total_amount': total_amount,
+        'cluster_label': cluster_label,
+        'breakdown': {
+            'high': int((group['transaction_color'] == 'High Need').sum()),
+            'medium': int((group['transaction_color'] == 'Medium Need').sum()),
+            'low': int((group['transaction_color'] == 'Low Need').sum())
+        }
+    })
         'barangay': barangay,
         'total_assistances': total_assistances,
         'total_amount': total_amount,

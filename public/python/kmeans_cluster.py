@@ -33,6 +33,12 @@ def clean_barangay(b):
         return None
 
     b = b.replace("\n", " ").replace("\r", " ").strip().upper()
+    b = b.replace(".", "").replace("Ñ", "N")
+    
+    if b.startswith("STO "):
+        b = "SANTO " + b[4:]
+    elif b == "STO":
+        b = "SANTO"
 
     replacements = {
         "BARANGAY": "A.O. FLOIRENDO",
@@ -41,32 +47,23 @@ def clean_barangay(b):
         "TRANSIENT CLIENT": "UPPER LICANAN",
 
         # J.P. Laurel variants
-        "J.P LAUREL": "J.P. LAUREL",
-        "J.P. LAUREL": "J.P. LAUREL",
-        "J.P.": "J.P. LAUREL",
-        "J.P": "J.P. LAUREL",
         "JP LAUREL": "J.P. LAUREL",
-        "JP LAUREL ": "J.P. LAUREL",
+        "JP": "J.P. LAUREL",
 
         # Cagangohan
         "CAGGANGOHAN": "CAGANGOHAN",
         "CGANGOHAN": "CAGANGOHAN",
-        "CAGANGOHAN ": "CAGANGOHAN",
 
         # Southern Davao
-        "SO. DAVAO": "SOUTHERN DAVAO",
-        "S.O DAVAO": "SOUTHERN DAVAO",
-        "S.O. DAVAO": "SOUTHERN DAVAO",
+        "SO DAVAO": "SOUTHERN DAVAO",
+        "S O DAVAO": "SOUTHERN DAVAO",
         "SOUTHER DAVAO": "SOUTHERN DAVAO",
-        "SOUTHERN AVAO": "SOUTHERN DAVAO",
-        "SOUTHERN AAVO": "SOUTHERN DAVAO",
 
-        # Sto Niño
-        "STO. NIÑO": "SANTO NIÑO",
-        "STO NIÑO": "SANTO NIÑO",
+        # Sto Niño variants (now handled by STO->SANTO and dot removal)
+        "SANTO NINO": "SANTO NIÑO",
 
         # Sta Cruz
-        "STA. CRUZ": "SANTA CRUZ",
+        "STA CRUZ": "SANTA CRUZ",
 
         # New Visayas
         "NEW VISYAS": "NEW VISAYAS",
@@ -74,16 +71,11 @@ def clean_barangay(b):
 
         # Salvacion
         "SAVACION": "SALVACION",
-        "SEÑORITA": "SALVACION",
+        "SENORITA": "SALVACION",
 
         # Lemonsito → Kiotoy
         "LEMONSITO": "KIOTOY",
         "LEMON SITO": "KIOTOY",
-
-        # Trailing spaces
-        "CONSOLACION ": "CONSOLACION",
-        "KATUALAN ": "KATUALAN",
-        "UPPER LICANAN ": "UPPER LICANAN",
     }
 
     return replacements.get(b, b)
@@ -126,16 +118,34 @@ barangay_data = raw.groupby("barangay").agg(
 print("Barangays detected:", barangay_data.shape[0])
 
 # ======================================
-# Frequency-based Labeling (Option B)
+# Weighted Need Index Calculation
 # ======================================
+# We combine Frequency (Count) and Intensity (Amount)
+# Index = Total Amount + (Count * 500)
+# This ensures a barangay with few but expensive transactions is still flagged.
+barangay_data["need_index"] = barangay_data["total_amount"] + (barangay_data["total_assistances"] * 500)
+
+# ======================================
+# Dynamic Threshold Calculation (Quantiles)
+# ======================================
+high_threshold = barangay_data['need_index'].quantile(0.70) # Top 30%
+low_threshold = barangay_data['need_index'].quantile(0.30)  # Bottom 30%
+
+# Handle edge case where all data is the same
+if high_threshold == low_threshold:
+    high_threshold = barangay_data['need_index'].mean() + 1
+    low_threshold = barangay_data['need_index'].mean()
+
 def assign_label(row):
-    count = row['total_assistances']
-    if count >= 31:
+    score = row['need_index']
+    if score >= high_threshold:
         return "High Need"
-    elif count >= 11:
+    elif score >= low_threshold:
         return "Medium Need"
     else:
         return "Low Need"
+
+print(f"Dynamic Thresholds (Index): Low < {low_threshold:.1f}, High >= {high_threshold:.1f}")
 
 barangay_data["cluster_label"] = barangay_data.apply(assign_label, axis=1)
 # Keep cluster_idx for compatibility

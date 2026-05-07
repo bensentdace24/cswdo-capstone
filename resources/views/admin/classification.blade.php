@@ -153,8 +153,10 @@
                                 $highUrgencyCount = 0;
                                 if ($hasAnomalies) {
                                     $highUrgencyCount = collect($results['anomalies'])
-                                        ->where('predicted_urgency', 'High Urgency')
-                                        ->where('predicted_urgency', 'high')
+                                        ->filter(function($item) {
+                                            $urg = strtolower($item['predicted_urgency'] ?? $item['urgency'] ?? '');
+                                            return $urg === 'high urgency' || $urg === 'high';
+                                        })
                                         ->count();
                                 }
                             @endphp
@@ -173,9 +175,8 @@
                                 $highUrgencyAnomalies = [];
                                 if ($hasAnomalies) {
                                     $highUrgencyAnomalies = array_filter($results['anomalies'], function ($row) {
-                                        return isset($row['predicted_urgency']) && 
-                                               (strtolower($row['predicted_urgency']) === 'high urgency' || 
-                                                strtolower($row['predicted_urgency']) === 'high');
+                                        $urg = strtolower($row['predicted_urgency'] ?? $row['urgency'] ?? '');
+                                        return $urg === 'high urgency' || $urg === 'high';
                                     });
                                 }
                             @endphp

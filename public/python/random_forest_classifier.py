@@ -22,11 +22,49 @@ except Exception as e:
 
 
 # =======================================================
+# Cleaning Function
+# =======================================================
+def clean_barangay(b):
+    if not isinstance(b, str):
+        return None
+
+    b = b.replace("\n", " ").replace("\r", " ").strip().upper()
+    b = b.replace(".", "").replace("Ñ", "N")
+    
+    if b.startswith("STO "):
+        b = "SANTO " + b[4:]
+    elif b == "STO":
+        b = "SANTO"
+
+    replacements = {
+        "BARANGAY": "A.O. FLOIRENDO",
+        "BALIK-PROBINSYA": "A.O. FLOIRENDO",
+        "CLIENT": "A.O. FLOIRENDO",
+        "TRANSIENT CLIENT": "UPPER LICANAN",
+        "JP LAUREL": "J.P. Laurel",
+        "JP": "J.P. Laurel",
+        "CAGGANGOHAN": "CAGANGOHAN",
+        "CGANGOHAN": "CAGANGOHAN",
+        "SO DAVAO": "SOUTHERN DAVAO",
+        "S O DAVAO": "SOUTHERN DAVAO",
+        "SOUTHER DAVAO": "SOUTHERN DAVAO",
+        "SANTO NINO": "SANTO NIÑO",
+        "STA CRUZ": "SANTA CRUZ",
+        "NEW VISYAS": "NEW VISAYAS",
+        "NEW MALAGA": "NEW MALITBOG",
+        "SAVACION": "SALVACION",
+        "SENORITA": "SALVACION",
+        "LEMONSITO": "KIOTOY",
+        "LEMON SITO": "KIOTOY",
+    }
+    return replacements.get(b, b)
+
+# =======================================================
 # 2. Load Dataset
 # =======================================================
 query = """
 SELECT
-    UPPER(TRIM(barangay)) AS barangay,
+    barangay,
     COUNT(*) AS total_assistances,
     SUM(amount) AS total_amount
 FROM acknowledgement_receipts
@@ -35,11 +73,18 @@ WHERE barangay IS NOT NULL
 GROUP BY barangay
 """
 
-data = pd.read_sql(query, db)
+raw_data = pd.read_sql(query, db)
 
-if data.empty:
+if raw_data.empty:
     print("[WARNING] No data found.")
     exit()
+
+# Clean and Merge
+raw_data["barangay"] = raw_data["barangay"].apply(clean_barangay)
+data = raw_data.groupby("barangay").agg({
+    "total_assistances": "sum",
+    "total_amount": "sum"
+}).reset_index()
 
 total_rows = data.shape[0]
 
